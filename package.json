@@ -1,0 +1,27 @@
+{
+  "name": "enterprise-knowledge-assistant",
+  "version": "0.1.0",
+  "description": "企业内部知识问答与制度助手 · 证据检索型问答（单文件前端 + 可选零依赖服务端）",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "serve": "python -m http.server 8765 --bind 127.0.0.1",
+    "serve:server": "node server/server.mjs",
+    "eval": "node eval/run-eval.mjs",
+    "eval:baseline": "node eval/run-eval.mjs --label baseline",
+    "test:llm": "node eval/llm-layer-test.mjs",
+    "test:permission": "node eval/permission-audit-test.mjs",
+    "test:parse": "node eval/parse-test.mjs",
+    "test:model": "node eval/model-rerank-test.mjs",
+    "test:answer": "node eval/answer-zoom-list-test.mjs",
+    "test:doc": "node eval/doc-manage-test.mjs",
+    "test:server": "node eval/server-mode-test.mjs",
+    "test:ux": "node eval/ux-polish-test.mjs",
+    "test": "node eval/run-eval.mjs && node eval/llm-layer-test.mjs && node eval/permission-audit-test.mjs && node eval/parse-test.mjs && node eval/model-rerank-test.mjs && node eval/answer-zoom-list-test.mjs && node eval/doc-manage-test.mjs && node eval/server-mode-test.mjs && node eval/ux-polish-test.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.63.0"
+  }
+}

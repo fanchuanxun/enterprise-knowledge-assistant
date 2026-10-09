@@ -1,0 +1,2 @@
+# 服务端运行期产物 —— 由 node server/server.mjs 首次启动时生成，不应提交
+data/

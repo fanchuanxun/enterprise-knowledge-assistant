@@ -1,0 +1,3 @@
+# 统一换行符：仓库内存 LF，检出时按平台自动处理，
+# 避免 Windows / macOS / Linux 之间产生整文件级别的无意义 diff。
+* text=auto

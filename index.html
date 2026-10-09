@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7fb">
+  <title>知规 · 企业知识问答与制度助手</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root{--bg:#f5f7fb;--surface:#fff;--surface-2:#f8fafc;--ink:#172033;--muted:#718096;--line:#e7ebf2;--blue:#3867e8;--blue-2:#eef3ff;--teal:#0e9a83;--teal-bg:#eaf8f5;--amber:#b86d12;--amber-bg:#fff6e8;--red:#c64545;--shadow:0 16px 48px rgba(24,39,75,.08);--radius:18px}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--bg)}button,input,select,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(56,103,232,.22);outline-offset:2px}
+    .shell{min-height:100vh;display:grid;grid-template-columns:248px minmax(0,1fr)}.sidebar{background:#fff;border-right:1px solid var(--line);padding:24px 16px;display:flex;flex-direction:column;gap:28px}.brand{display:flex;align-items:center;gap:12px;padding:2px 10px}.brand-mark{width:40px;height:40px;border-radius:14px;background:linear-gradient(145deg,#4778f6,#3156c8);color:#fff;display:grid;place-items:center;font-weight:800;font-size:19px;box-shadow:0 8px 18px rgba(56,103,232,.25)}.brand-name{font-size:16px;font-weight:750;letter-spacing:.2px}.brand-sub{font-size:11px;color:var(--muted);margin-top:3px}.nav-label{font-size:11px;color:#9aa4b4;text-transform:uppercase;letter-spacing:1px;padding:0 12px 8px}.nav{display:grid;gap:5px}.nav button{border:0;background:transparent;color:#677489;text-align:left;padding:11px 12px;border-radius:11px;display:flex;align-items:center;gap:12px;font-size:14px;transition:.18s}.nav button:hover{background:#f6f8fc;color:var(--ink)}.nav button.active{background:var(--blue-2);color:var(--blue);font-weight:650}.nav-icon{width:19px;text-align:center;font-size:17px}.side-bottom{margin-top:auto;display:grid;gap:12px}.local-card{background:#f7f9fc;border:1px solid var(--line);padding:13px;border-radius:13px}.local-card strong{display:block;font-size:12px;margin-bottom:5px}.local-card span{font-size:11px;color:var(--muted);line-height:1.55}.version{font-size:11px;color:#a4adba;padding:0 11px}
+    .main{min-width:0}.topbar{height:74px;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 34px;position:sticky;top:0;z-index:5}.crumb{font-size:13px;color:var(--muted)}.crumb b{color:var(--ink);font-weight:650}.top-actions{display:flex;align-items:center;gap:12px}.local-pill{font-size:11px;color:#8d5a12;background:#fff6e8;border:1px solid #f4e3c5;border-radius:99px;padding:7px 10px;display:flex;align-items:center;gap:6px}.dot{width:6px;height:6px;background:#e29a2d;border-radius:50%}.role-select{border:1px solid var(--line);background:#fff;border-radius:10px;color:#4a5568;padding:8px 10px;font-size:12px;max-width:170px}.avatar{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:#eaf0ff;color:#315bd2;font-size:12px;font-weight:700}.content{max-width:1440px;padding:34px 38px 50px;margin:auto}.page{display:none}.page.active{display:block;animation:appear .25s ease}@keyframes appear{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
+    .hero{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin:6px 0 24px}.eyebrow{font-size:12px;letter-spacing:.5px;color:var(--blue);font-weight:700;margin-bottom:10px}.hero h1{font-size:30px;letter-spacing:-.7px;margin:0 0 9px;line-height:1.2}.hero p{font-size:14px;color:var(--muted);line-height:1.7;margin:0;max-width:640px}.hero-side{display:flex;align-items:center;gap:9px;padding-top:14px}.primary,.secondary,.quiet{border:0;border-radius:10px;padding:10px 15px;font-size:13px;font-weight:650;transition:.18s}.primary{background:var(--blue);color:#fff;box-shadow:0 5px 12px rgba(56,103,232,.18)}.primary:hover{background:#2d58d1;transform:translateY(-1px)}.secondary{background:#fff;color:#475569;border:1px solid var(--line)}.secondary:hover{background:#f8fafc;border-color:#ccd5e3}.quiet{background:transparent;color:var(--muted);padding:8px}.quiet:hover{background:#f4f6fa;color:var(--ink)}
+    .ask-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(260px,.8fr);gap:18px;align-items:start}.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 4px 18px rgba(25,39,70,.025)}.ask-card{padding:24px}.search-label{font-size:13px;font-weight:700;margin:0 0 12px}.search-box{display:flex;align-items:center;gap:10px;padding:7px 8px 7px 15px;border:1px solid #dce3ed;border-radius:14px;background:#fff;box-shadow:0 3px 12px rgba(30,50,90,.035);transition:.2s}.search-box:focus-within{border-color:#91a9fa;box-shadow:0 0 0 4px rgba(56,103,232,.08)}.search-symbol{font-size:19px;color:#98a3b4}.search-box input{border:0;outline:0;flex:1;min-width:0;height:42px;color:var(--ink);font-size:14px}.search-box input::placeholder{color:#a2acba}.search-box .primary{padding:10px 17px}.suggestions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px}.suggestions span{font-size:11px;color:#9aa4b4;margin-right:2px}.chip{border:1px solid #e6eaf1;border-radius:99px;background:#fff;padding:7px 10px;font-size:11px;color:#64748b}.chip:hover{border-color:#b5c5f7;color:var(--blue);background:#f8faff}.answer-wrap{margin-top:21px;min-height:216px}.answer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.answer-head h2{font-size:14px;margin:0}.small-muted{font-size:11px;color:#9aa4b4}.empty-state{border:1px dashed #dce3ed;border-radius:14px;padding:28px 20px;text-align:center;background:#fbfcfe}.empty-icon{width:43px;height:43px;border-radius:14px;background:#eef3ff;color:var(--blue);display:grid;place-items:center;margin:0 auto 12px;font-size:20px}.empty-state strong{font-size:13px;display:block;margin-bottom:6px}.empty-state p{font-size:12px;color:var(--muted);margin:0;line-height:1.6}.answer-result{border:1px solid #dfe7fb;background:linear-gradient(180deg,#f9fbff,#fff);border-radius:14px;padding:17px}.result-label{font-size:11px;color:var(--blue);font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:10px}.answer-text{font-size:14px;line-height:1.8;color:#29364c;margin:0}.answer-caveat{font-size:11px;color:#7b8798;margin-top:10px;line-height:1.5}.sources{margin-top:14px;display:grid;gap:9px}.source-item{padding:13px;border:1px solid var(--line);border-radius:12px;background:#fff}.source-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.source-title{font-size:12px;font-weight:700;color:#2c3a50}.source-meta{font-size:10px;color:#8a96a8;margin-top:4px}.source-open{border:0;background:transparent;color:var(--blue);font-size:11px;white-space:nowrap;padding:1px}.source-excerpt{font-size:12px;line-height:1.65;color:#657287;margin:9px 0 0}.source-excerpt mark{background:#fff0bd;color:#614b14;border-radius:2px;padding:0 1px}.feedback{display:flex;align-items:center;gap:9px;border-top:1px solid var(--line);padding-top:12px;margin-top:14px}.feedback span{font-size:11px;color:var(--muted);margin-right:auto}.feedback button{border:1px solid var(--line);background:#fff;border-radius:8px;color:#677489;font-size:11px;padding:6px 9px}.feedback button:hover{background:#f6f8fc}
+    .info-stack{display:grid;gap:14px}.info-card{padding:19px}.info-title{font-size:13px;font-weight:700;margin:0 0 15px}.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{padding:12px;background:var(--surface-2);border-radius:12px}.stat b{font-size:20px;display:block;letter-spacing:-.4px}.stat span{font-size:10px;color:var(--muted);display:block;margin-top:5px}.source-note{font-size:11px;line-height:1.65;color:#748196;margin:13px 0 0}.notice{padding:14px;background:#fffbf3;border:1px solid #f4e9d5;border-radius:13px}.notice-title{display:flex;align-items:center;gap:7px;color:#8c5b15;font-size:12px;font-weight:700;margin-bottom:6px}.notice p{font-size:11px;line-height:1.65;color:#8d7755;margin:0}.security-card{padding:18px}.security-list{display:grid;gap:11px}.security-row{display:flex;gap:10px;align-items:flex-start}.security-icon{width:25px;height:25px;flex:none;border-radius:8px;display:grid;place-items:center;background:#eff7f5;color:#298d79;font-size:12px}.security-row strong{font-size:11px;display:block;margin:1px 0 3px}.security-row small{font-size:10px;line-height:1.5;color:#8692a4;display:block}
+    .page-toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:21px 0 16px}.toolbar-left,.toolbar-right{display:flex;align-items:center;gap:9px}.toolbar-search{height:38px;width:230px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:0 12px;font-size:12px}.filter-select{height:38px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#657287;padding:0 10px;font-size:12px}.doc-count{font-size:12px;color:var(--muted)}.doc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.doc-card{padding:17px;transition:.18s}.doc-card:hover{border-color:#d5dff8;box-shadow:0 8px 24px rgba(30,50,90,.06);transform:translateY(-1px)}.doc-card-top{display:flex;gap:12px;align-items:flex-start}.file-icon{width:37px;height:41px;border-radius:10px;background:#eff3ff;color:#446be1;display:grid;place-items:center;font-size:15px;font-weight:750;flex:none}.doc-name{font-size:13px;font-weight:700;line-height:1.45;margin:0 0 5px}.doc-meta{font-size:10px;color:#97a1b0;display:flex;flex-wrap:wrap;gap:7px}.doc-summary{font-size:11px;line-height:1.6;color:#748196;margin:13px 0 12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.tag-row{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid #f0f2f6;padding-top:11px}.tags{display:flex;gap:6px;flex-wrap:wrap}.tag{font-size:10px;padding:4px 7px;border-radius:99px;background:#f4f6f9;color:#738096}.tag.access{background:#edf7f4;color:#368671}.tag.off{background:#fff3ed;color:#bb6c3d}.doc-actions{display:flex;gap:5px}.doc-actions button{border:0;background:transparent;color:#8591a3;font-size:11px;padding:5px}.doc-actions button:hover{color:var(--blue)}.empty-docs{grid-column:1/-1;padding:48px 20px;text-align:center;color:var(--muted);font-size:13px;border:1px dashed var(--line);border-radius:16px;background:#fff}
+    .manage-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:17px}.manage-card{padding:21px}.manage-card h2{font-size:14px;margin:0 0 7px}.manage-card>p{font-size:11px;color:var(--muted);line-height:1.65;margin:0 0 17px}.manage-actions{display:flex;gap:9px;flex-wrap:wrap}.manage-stat-list{display:grid;gap:9px}.manage-stat{display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f8fafc;border-radius:11px}.manage-stat span{font-size:11px;color:#728096}.manage-stat b{font-size:12px}.permission-table{width:100%;border-collapse:collapse;margin-top:13px}.permission-table th,.permission-table td{text-align:left;font-size:10px;padding:10px 8px;border-bottom:1px solid #edf0f5}.permission-table th{color:#8c97a8;font-weight:600}.permission-table td{color:#58677d}.security-callout{margin-top:14px;padding:13px;border-radius:12px;background:#fff8ee;border:1px solid #f3e6cd;color:#8f6c37;font-size:10px;line-height:1.65}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(18,29,50,.38);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modal-backdrop.open{display:flex}.modal{width:min(620px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 28px 90px rgba(15,25,45,.25);padding:23px}.viewer-modal{width:min(760px,100%)}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}.modal-head h2{font-size:17px;margin:0}.close-btn{border:0;background:#f4f6f9;border-radius:8px;width:31px;height:31px;color:#718096;font-size:18px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:grid;gap:7px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:#576579;font-weight:650}.field input,.field select,.field textarea{width:100%;border:1px solid #dfe5ee;border-radius:9px;padding:10px 11px;font-size:12px;color:var(--ink);background:#fff}.field textarea{min-height:190px;resize:vertical;line-height:1.6}.field-hint{font-size:10px;color:#9aa4b4;line-height:1.5}.doc-view-meta{font-size:11px;color:#7b8798;padding:0 0 14px;border-bottom:1px solid var(--line)}.doc-view-body{max-height:60vh;overflow:auto;margin-top:16px;padding:17px;border:1px solid #edf0f5;border-radius:12px;background:#fbfcfe}.doc-view-body pre{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:13px;line-height:1.85;color:#344258}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:17px}.toast{position:fixed;bottom:25px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#1f2d43;color:#fff;padding:11px 16px;border-radius:11px;box-shadow:var(--shadow);font-size:12px;transition:.22s;z-index:30}.toast.show{opacity:1;transform:translate(-50%,0)}.hidden{display:none!important}.footer-note{font-size:10px;color:#a0aab8;text-align:center;margin-top:22px;line-height:1.6}
+    @media(max-width:1050px){.shell{grid-template-columns:210px minmax(0,1fr)}.content{padding:27px 24px 42px}.ask-grid{grid-template-columns:minmax(0,1.4fr) minmax(235px,.8fr)}}@media(max-width:820px){.shell{grid-template-columns:1fr}.sidebar{position:sticky;top:0;z-index:10;padding:10px 14px;border-right:0;border-bottom:1px solid var(--line);display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:10px}.brand{padding:0}.brand-mark{width:34px;height:34px}.brand-sub,.nav-label,.side-bottom{display:none}.nav{display:flex;gap:3px}.nav button{padding:8px 9px;font-size:11px;gap:6px}.nav-icon{font-size:14px;width:auto}.topbar{height:58px;padding:0 18px}.content{padding:23px 17px 35px}.ask-grid,.manage-grid{grid-template-columns:1fr}.info-stack{grid-template-columns:1fr 1fr}.hero h1{font-size:25px}.hero-side{padding-top:4px}.doc-grid{grid-template-columns:1fr}}@media(max-width:560px){.sidebar{align-items:flex-start;flex-wrap:wrap}.brand{width:100%}.nav{width:100%;justify-content:space-between}.nav button{flex:1;justify-content:center}.nav button .nav-icon{display:none}.topbar{padding:0 14px}.top-actions{gap:7px}.local-pill{font-size:0;padding:8px}.local-pill .dot{width:7px;height:7px}.role-select{max-width:125px;padding:7px;font-size:10px}.avatar{width:30px;height:30px}.content{padding:19px 13px 30px}.hero{display:block}.hero h1{font-size:23px}.hero-side{margin-top:14px}.ask-card{padding:16px}.search-box{gap:6px;padding-left:10px}.search-box input{font-size:12px}.search-box .primary{padding:9px 11px;font-size:11px}.info-stack{grid-template-columns:1fr}.page-toolbar{align-items:flex-start;flex-direction:column}.toolbar-left,.toolbar-right{width:100%;flex-wrap:wrap}.toolbar-search{flex:1;width:auto}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.hero-side .secondary,.hero-side .primary{padding:9px 11px;font-size:11px}}
+    .answer-parts{display:grid;gap:12px}.answer-part{width:100%;display:block;text-align:left;padding:12px 14px;border:1px solid #e8edf5;border-radius:11px;background:rgba(255,255,255,.78);color:inherit;cursor:zoom-in;transition:border-color .16s,box-shadow .16s,background .16s}.answer-part:hover{border-color:#a9bdf5;background:#fff;box-shadow:0 6px 18px rgba(56,103,232,.09)}.answer-part-title{display:block;font-size:12px;font-weight:700;color:#3559a8;margin-bottom:7px}.answer-subsection{display:block;padding:0}.answer-text{display:block;font-size:13px;line-height:1.85;color:#29364c;margin:0;white-space:pre-line;overflow-wrap:anywhere}.zoom-hint{display:block;text-align:right;color:#8795aa;font-size:10px;margin-top:7px}.answer-zoom-modal{width:min(1000px,96vw)}.answer-zoom-body{max-height:72vh;overflow:auto;margin-top:16px;padding:clamp(20px,4vw,44px);border:1px solid #edf0f5;border-radius:14px;background:#fbfcfe;color:#24334b;font-size:clamp(17px,2.1vw,23px);line-height:2;white-space:pre-wrap;overflow-wrap:anywhere;user-select:text}.source-excerpt{white-space:pre-line}.doc-view-body{line-height:1.8}.doc-view-body p{font-size:13px;line-height:1.85;color:#344258;margin:0 0 13px;white-space:pre-wrap}.doc-view-body .doc-md-heading{font-size:15px;color:#253753;margin:20px 0 9px;line-height:1.45}.doc-view-body .doc-md-heading:first-child{margin-top:0}.doc-view-body h4.doc-md-heading{font-size:13px}.doc-md-list{display:grid;gap:6px;margin:8px 0 15px 4px}.doc-md-list>div{display:grid;grid-template-columns:18px 1fr;gap:5px;align-items:start}.doc-md-list span{color:#5476d8}.doc-md-list p,.doc-view-body .doc-md-list p,.answer-generated .doc-md-list p{margin:0}.doc-view-body .doc-code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;background:#f2f5fa;border-radius:9px;padding:12px;color:#45536b}
+    .mode-pill{cursor:default;gap:6px}.mode-pill.mode-on{background:#eef4ff;border-color:#c9dbff;color:#2c50a8}
+    .llm-form{display:grid;gap:11px;margin:15px 0 16px}
+    .llm-form .field-hint{font-size:10px;color:#7b8798;line-height:1.6}
+    .model-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+    .model-row .secondary{white-space:nowrap;padding:9px 12px;font-size:11px}
+    .model-list{max-height:230px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:#fbfcfe;margin-top:2px}
+    .model-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;text-align:left;padding:9px 11px;border:0;border-bottom:1px solid #eef2f8;background:transparent;cursor:pointer;font:inherit;color:inherit}
+    .model-item:last-child{border-bottom:0}
+    .model-item:hover{background:#eef4ff}
+    .model-item.picked{background:#e8f0ff}
+    .model-name{display:block;font-size:12px;font-weight:700;color:#2c50a8;overflow-wrap:anywhere}
+    .model-meta{display:block;font-size:10px;color:#7b8798;margin-top:3px;overflow-wrap:anywhere}
+    .model-badge{font-size:9px;padding:2px 7px;border-radius:20px;background:#eef4ff;color:#3559a8;white-space:nowrap}
+    .switch-row{display:flex;align-items:center;gap:8px;font-size:12px;color:#3d4b60;cursor:pointer;font-weight:400}
+    .switch-row input{width:auto;margin:0}
+    .server-status{margin-top:13px;padding:11px 13px;border-radius:11px;background:#f5f7fb;border:1px solid #e8edf5;font-size:11px;color:#5b6a80;line-height:1.65}
+    .server-status.on{background:#f1f8f2;border-color:#cfe7d4;color:#3f6b4a}
+    .server-status.bad{background:#fff4f4;border-color:#f6d6d6;color:#a34a4a}
+    .server-status b{font-weight:700}
+    .server-audit{margin:0 0 16px;padding:15px;border:1px solid #dfe7fb;border-radius:13px;background:linear-gradient(180deg,#f9fbff,#fff)}
+    .server-audit h3{font-size:12px;margin:0 0 9px;color:#2c3a50}
+    .server-audit .integrity{font-size:11px;margin:0 0 12px;line-height:1.7;color:#5b6a80}
+    .server-audit .integrity.ok{color:#3f6b4a}
+    .server-audit .integrity.bad{color:#a34a4a;font-weight:700}
+    .server-audit .server-row{display:grid;grid-template-columns:130px 62px 92px minmax(0,1fr) 58px;gap:10px;align-items:center;padding:8px 4px;border-top:1px solid #eef2f8;font-size:10px;color:#5b6a80}
+    .server-audit .server-row.head{color:#8c97a8;font-weight:600;border-top:0;padding-bottom:4px}
+    .server-audit .server-row.denied{color:#a34a4a;background:#fff8f8;border-radius:8px}
+    .gen-pending{color:#6b7688;font-size:12px;margin:0}
+    .answer-generated{font-size:13px;line-height:1.85;color:var(--ink)}
+    .answer-generated p{margin:0 0 9px}
+    .answer-generated p:last-child{margin-bottom:0}
+    .answer-generated .doc-md-heading{font-size:13px;margin:10px 0 6px}
+    .answer-generated .doc-md-list{margin:0 0 9px}
+    .answer-generated-part{padding:14px 16px}
+    .answer-generated-part .zoom-hint{margin-top:9px}
+    .ghost-link{margin-left:auto;border:1px solid #d8e2f7;background:#fff;color:var(--blue);font-size:11px;font-weight:600;border-radius:8px;padding:4px 10px;white-space:nowrap}
+    .ghost-link:hover{background:#f2f6ff;border-color:#b5c5f7}
+    .answer-zoom-body.zoom-html{white-space:normal}
+    .zoom-block{margin-bottom:20px}
+    .zoom-block-title{font-size:.62em;font-weight:700;color:#3559a8;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #e6ecf8}
+    .zoom-block-body{white-space:pre-wrap;font-size:.86em;line-height:1.9}
+    .zoom-block-body.zoom-md{white-space:normal}
+    .zoom-block-body.zoom-md p{margin:0 0 .55em}
+    .zoom-block-body.zoom-md p:last-child{margin-bottom:0}
+    .zoom-divider{font-size:.62em;font-weight:700;color:#8795aa;margin:0 0 12px;padding-top:14px;border-top:1px dashed #e2e8f4}
+    .gen-warnings{display:grid;gap:7px;margin-top:10px}
+    .gen-warning{padding:9px 11px;border-radius:10px;background:#fff8ee;border:1px solid #f3e6cd;color:#8f6c37;font-size:11px;line-height:1.65}
+    .answer-error{padding:10px 12px;border-radius:10px;background:#fff3f3;border:1px solid #f6d6d6;color:#a34a4a;font-size:11px;line-height:1.65;margin-bottom:11px}
+    .audit-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:0 0 16px}
+    .audit-head,.audit-row{display:grid;grid-template-columns:130px 62px 92px minmax(0,1fr) 58px;gap:10px;align-items:center}
+    .audit-head{padding:0 15px 8px;font-size:10px;color:#8c97a8;font-weight:600;letter-spacing:.03em}
+    .audit-list{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+    .audit-row{padding:10px 14px;border-top:1px solid #f1f4f9;font-size:11px;color:#55637a}
+    .audit-row:first-child{border-top:0}
+    .audit-row.denied{background:#fff7f7}
+    .audit-row .audit-time{color:#8c97a8;font-size:10px;font-variant-numeric:tabular-nums}
+    .audit-row .audit-role{color:#3d4c63;font-weight:600}
+    .audit-row .audit-detail{color:#67748a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .audit-row .audit-result{font-size:10px;color:#4a7d55}
+    .audit-row.denied .audit-result{color:#b45a5a;font-weight:600}
+    .audit-empty{padding:26px 14px;text-align:center;font-size:11px;color:#8c97a8}
+    .doc-card.restricted{border-style:dashed;background:#fbfcfe}
+    .doc-card.restricted .doc-summary{color:#9aa6b8}
+    /* ── 使用者体验补充：搜索辅助 / 提问历史 / 加载态 / 复制 / 引导 / 审计筛选 ── */
+    .search-clear{border:0;background:#f1f4f9;color:#8b95a6;border-radius:50%;width:22px;height:22px;font-size:13px;line-height:1;display:none;place-items:center;flex:none}
+    .search-clear.show{display:grid}
+    .search-clear:hover{background:#e4e9f2;color:#5a6577}
+    .search-box .primary[disabled]{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+    .kbd{font:inherit;font-size:10px;border:1px solid #dde3ec;border-bottom-width:2px;border-radius:5px;padding:1px 5px;color:#8b95a6;background:#fafbfd}
+    .search-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:9px;font-size:10px;color:#9aa4b4;flex-wrap:wrap}
+    .history-row{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:13px}
+    .history-row .row-label{font-size:11px;color:#9aa4b4;margin-right:2px}
+    .history-chip{border:1px solid #e6eaf1;border-radius:99px;background:#fbfcfe;padding:6px 10px;font-size:11px;color:#5c6a80;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .history-chip:hover{border-color:#b5c5f7;color:var(--blue);background:#f8faff}
+    .history-clear{border:0;background:transparent;color:#9aa4b4;font-size:10px;padding:4px 7px;border-radius:7px}
+    .history-clear:hover{color:var(--red);background:#fdf3f3}
+    .onboard{display:flex;gap:13px;align-items:flex-start;padding:14px 16px;border:1px solid #dfe7fb;border-radius:14px;background:linear-gradient(180deg,#f9fbff,#fff);margin-bottom:17px}
+    .onboard-steps{flex:1;min-width:0}
+    .onboard-steps b{font-size:12px;color:#2c3a50}
+    .onboard-steps ol{margin:5px 0 0;padding-left:18px;display:grid;gap:5px}
+    .onboard-steps li{font-size:11px;line-height:1.65;color:#5b6a80}
+    .onboard-close{border:0;background:transparent;color:#9aa4b4;font-size:15px;padding:2px 7px;border-radius:7px;flex:none}
+    .onboard-close:hover{color:#5a6577;background:#eef2f8}
+    .ask-loading{display:grid;gap:9px}
+    .skeleton{height:12px;border-radius:7px;background:linear-gradient(90deg,#eef1f6 25%,#e3e8f0 37%,#eef1f6 63%);background-size:400% 100%;animation:skeleton 1.3s ease infinite}
+    .skeleton.w-90{width:90%}.skeleton.w-70{width:70%}.skeleton.w-50{width:50%}
+    @keyframes skeleton{0%{background-position:100% 50%}100%{background-position:0 50%}}
+    .loading-note{font-size:11px;color:#7b8798;margin:0}
+    .answer-actions{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap;margin-top:13px;padding-top:12px;border-top:1px solid #eef2f8}
+    .answer-actions .left{display:flex;gap:8px;flex-wrap:wrap}
+    .answer-actions .ghost-link{margin-left:0}
+    .retry-block{margin-top:13px;padding:13px 14px;border:1px dashed #dce3ed;border-radius:12px;background:#fbfcfe}
+    .retry-block b{display:block;font-size:11px;color:#5b6a80;margin-bottom:9px}
+    .retry-chips{display:flex;gap:7px;flex-wrap:wrap}
+    .retry-chip{border:1px solid #e6eaf1;border-radius:99px;background:#fff;padding:7px 11px;font-size:11px;color:#4f5f78;text-align:left}
+    .retry-chip:hover{border-color:#b5c5f7;color:var(--blue);background:#f8faff}
+    .audit-toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:0 0 12px}
+    .audit-toolbar .filter-select{height:34px}
+    .audit-toolbar .audit-filter-note{font-size:11px;color:#8c97a8;margin-left:auto}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">知</div><div><div class="brand-name">知规</div><div class="brand-sub">企业知识问答助手</div></div></div>
+    <div style="flex:1">
+      <div class="nav-label">工作空间</div>
+      <nav class="nav" aria-label="主导航">
+        <button class="active" data-page="ask"><span class="nav-icon">⌕</span>知识问答</button>
+        <button data-page="docs"><span class="nav-icon">▤</span>知识文档</button>
+        <button data-page="manage"><span class="nav-icon">⚙</span>资料与权限</button>
+        <button data-page="audit"><span class="nav-icon">▦</span>操作审计</button>
+      </nav>
+    </div>
+    <div class="side-bottom">
+      <div class="local-card"><strong>本地演示空间</strong><span>文档仅保存在当前浏览器。请勿导入真实机密资料。</span></div>
+      <div class="version">知规 · 本地原型 v0.1</div>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div class="crumb">工作空间　/　<b id="crumbTitle">知识问答</b></div>
+      <div class="top-actions">
+        <div class="local-pill" title="当前为浏览器本地原型"><i class="dot"></i>本地演示</div>
+        <div class="local-pill mode-pill" id="modePill" title="未配置模型服务，仅返回原文证据">证据摘录</div>
+        <select class="role-select" id="roleSelect" aria-label="演示权限角色" title="仅用于演示角色筛选，不代表真实身份认证">
+          <option value="employee">演示身份：员工</option><option value="hr">演示身份：人事</option><option value="manager">演示身份：主管</option><option value="admin">演示身份：管理员</option>
+        </select>
+        <div class="avatar" id="avatar">员</div>
+      </div>
+    </header>
+    <div class="content">
+      <section class="page active" id="page-ask">
+        <div class="hero"><div><div class="eyebrow">企业知识服务 · 有据可查</div><h1>你好，需要了解什么？</h1><p>查询制度、流程和内部知识。回答只摘取已收录资料中的依据，并附上来源；没有找到足够证据时会明确提示。</p></div><div class="hero-side"><button class="secondary" id="goDocs">查看知识库</button><button class="primary" id="quickImport">＋ 导入资料</button></div></div>
+        <div class="onboard" id="onboard"><div class="onboard-steps"><b>三步上手</b><ol><li>在下面输入问题，例如「年假怎么申请」「差旅住宿费需要哪些凭证」，回车即可查询。</li><li>回答只摘取已收录资料，每条都带来源编号；点回答可放大，和原文逐字对照。</li><li>没找到答案时，说明资料里确实没有；可换一种问法，或到「知识文档」页补充资料。</li></ol></div><button type="button" class="onboard-close" id="onboardClose" aria-label="关闭上手引导">×</button></div>
+        <div class="ask-grid">
+          <section class="card ask-card">
+            <div class="search-label">向企业知识库提问</div>
+            <div class="search-box"><span class="search-symbol">⌕</span><input id="questionInput" type="text" autocomplete="off" aria-label="向企业知识库提问" placeholder="例如：差旅住宿费需要哪些凭证？"><button type="button" class="search-clear" id="questionClear" aria-label="清空问题">×</button><button class="primary" id="askButton" disabled>查询答案</button></div>
+            <div class="search-foot"><span>按 <span class="kbd">/</span> 聚焦搜索框 · <span class="kbd">Enter</span> 提交 · <span class="kbd">Esc</span> 关闭弹窗</span><span id="askHint" role="status"></span></div>
+            <div class="history-row hidden" id="historyRow"></div>
+            <div class="suggestions"><span>试试这些：</span><button class="chip" data-query="年假怎么申请">年假怎么申请</button><button class="chip" data-query="差旅报销需要什么材料">差旅报销材料</button><button class="chip" data-query="电脑设备如何申请">设备申请流程</button></div>
+            <div class="answer-wrap"><div class="answer-head"><h2>检索结果</h2><span class="small-muted" id="resultStatus">等待提问</span></div><div id="answerPane" aria-live="polite" aria-busy="false"><div class="empty-state"><div class="empty-icon">⌕</div><strong>答案将从已收录资料中检索</strong><p>输入问题后查看匹配段落及文档来源。当前版本采用证据检索，不会让模型补写资料中没有的内容。</p></div></div></div>
+          </section>
+          <aside class="info-stack">
+            <section class="card info-card"><h2 class="info-title">知识库概览</h2><div class="stat-row"><div class="stat"><b id="statDocs">—</b><span>已启用文档</span></div><div class="stat"><b id="statSize">—</b><span>知识内容</span></div></div><p class="source-note">当前角色可检索其有权查看的文档。切换角色仅用于本地权限演示。</p></section>
+            <section class="notice"><div class="notice-title"><span>ⓘ</span>回答边界</div><p>只有检索到足够匹配的资料时才展示证据。命中不足会提示“暂未找到依据”，请联系资料维护人员补充或核实。</p></section>
+            <section class="card security-card"><h2 class="info-title">数据使用提示</h2><div class="security-list"><div class="security-row"><div class="security-icon">⌂</div><div><strong>仅当前浏览器保存</strong><small>演示文档写入此浏览器的本地数据库，不会上传。</small></div></div><div class="security-row"><div class="security-icon">◇</div><div><strong>权限为界面级演示</strong><small>真实部署需由服务端验证身份与每篇文档的访问权限。</small></div></div></div></section>
+          </aside>
+        </div>
+        <div class="footer-note">演示数据为虚构内容 · 检索结果用于辅助查找，不替代正式制度解释或审批结论</div>
+      </section>
+      <section class="page" id="page-docs">
+        <div class="hero"><div><div class="eyebrow">知识资产</div><h1>知识文档</h1><p>维护已收录制度、流程和操作资料。文档可启用/停用、修改元信息或移除；查询结果会保留文档标题和段落来源。</p></div><div class="hero-side"><button class="primary" id="addDoc">＋ 导入文档</button></div></div>
+        <div class="page-toolbar"><div class="toolbar-left"><input id="docSearch" class="toolbar-search" placeholder="搜索文档标题或内容"><select class="filter-select" id="categoryFilter"><option value="all">全部分类</option><option>人事制度</option><option>财务报销</option><option>办公流程</option><option>产品知识</option><option>其他</option></select><select class="filter-select" id="statusFilter"><option value="all">全部状态</option><option value="active">已启用</option><option value="inactive">已停用</option></select></div><div class="toolbar-right"><span id="docCount" class="doc-count"></span></div></div>
+        <div class="doc-grid" id="docGrid"></div>
+        <div class="footer-note">支持导入 TXT、Markdown、CSV、JSON、HTML（≤ 1 MB）与 DOCX、PDF（≤ 8 MB，纯前端解析，零外部依赖）。扫描件 PDF、加密文档与图片型 PDF 无法提取文本，请先转为文本。</div>
+      </section>
+      <section class="page" id="page-manage">
+        <div class="hero"><div><div class="eyebrow">知识运营</div><h1>资料与权限</h1><p>查看当前本地知识库状态、导出备份，并了解此原型的权限策略与数据保护边界。越权访问会被拒绝并记入操作审计。</p></div></div>
+        <div class="manage-grid">
+          <section class="card manage-card"><h2>知识库维护</h2><p>导入、编辑和启停资料，或导出当前浏览器中的文档备份。导出的 JSON 文件包含文档全文，请妥善保管。</p><div class="manage-actions"><button class="primary" id="manageImport">导入文档</button><button class="secondary" id="exportData">导出知识库备份</button><button class="secondary" id="manageViewDocs">管理文档</button></div><div class="manage-stat-list" style="margin-top:18px"><div class="manage-stat"><span>文档总数</span><b id="manageDocs">0</b></div><div class="manage-stat"><span>启用中</span><b id="manageActive">0</b></div><div class="manage-stat"><span>当前演示身份</span><b id="manageRole">员工</b></div><div class="manage-stat"><span>存储位置</span><b>浏览器 IndexedDB</b></div></div></section>
+          <section class="card manage-card"><h2>访问范围（原型规则）</h2><p>下表由代码中的显式访问策略表 <code>ACCESS_POLICY</code> 直接渲染，检索过滤与文档打开共用同一份策略，避免规则与实现脱节。此处仍不构成服务端权限控制。</p><table class="permission-table"><thead><tr><th>演示角色</th><th>所有员工</th><th>人事专属</th><th>主管专属</th></tr></thead><tbody id="permissionTableBody"></tbody></table><div class="security-callout"><b>本机已实现：</b>显式访问策略表、越权访问拒绝留痕、操作审计。<b>上线前仍需补齐：</b>服务端登录认证、后端逐请求权限校验、审计写入不可篡改存储、文件隔离存储、传输与静态加密、备份恢复策略。浏览器角色下拉框不能作为真实身份凭证。</div></section>
+          <section class="card manage-card" id="serverCard"><h2>服务端模式（可选）</h2><p>默认是纯本地原型：可见范围只在前端过滤、身份靠下拉切换、审计存在浏览器里可被清空。连接本仓库附带的参考服务端后，改为<b>真实登录 + 服务端逐请求权限校验 + 追加式审计日志</b>——文档在出网前就按身份过滤，越权文档根本不会下发，越权请求由服务端权威记录且返回 403。</p><div class="llm-form"><div class="field"><label for="serverUrl">服务端地址</label><input id="serverUrl" placeholder="http://127.0.0.1:8787" autocomplete="off"><span class="field-hint">本仓库自带零依赖参考实现，启动：<code>node server/server.mjs</code></span></div><div class="field"><label for="serverUser">用户名</label><input id="serverUser" placeholder="admin" autocomplete="off"></div><div class="field"><label for="serverPass">口令</label><input id="serverPass" type="password" placeholder="demo1234" autocomplete="off"><span class="field-hint">演示账号 employee / hr / manager / admin，口令均为 demo1234。</span></div></div><div class="manage-actions"><button class="primary" id="serverConnect">连接并登录</button><button class="secondary" id="serverDisconnect">断开</button></div><div class="server-status" id="serverStatus">当前为纯本地模式</div></section>
+          <section class="card manage-card"><h2>模型服务（可选）</h2><p>接入任意 OpenAI 兼容的 <code>/chat/completions</code> 接口后，回答会由模型基于检索到的资料生成，并强制标注来源；未配置时保持「证据摘录」模式。密钥只写入本机 localStorage，不会发往其他位置，也不会写进导出备份。</p><div class="llm-form"><div class="field"><label for="llmBaseUrl">接口地址（Base URL）</label><input id="llmBaseUrl" placeholder="https://api.openai.com/v1" autocomplete="off"><span class="field-hint">只填到版本号为止，程序会自动拼接 /chat/completions 与 /models。</span></div><div class="field"><label for="llmApiKey">API Key</label><input id="llmApiKey" type="password" placeholder="sk-..." autocomplete="off"><span class="field-hint">仅保存在本机浏览器，请勿在公共电脑上填写真实密钥。</span></div><div class="field"><label for="llmModel">模型名称</label><div class="model-row"><input id="llmModel" placeholder="gpt-4o-mini" autocomplete="off"><button type="button" class="secondary" id="llmFetchModels">拉取模型列表</button></div><span class="field-hint">填写 Base URL 与 API Key 后可拉取该接口的可用模型，点击列表项即可填入。</span></div><div class="field hidden" id="llmModelField"><label>可用模型</label><div class="model-list" id="llmModelList"></div><span class="field-hint" id="llmModelHint"></span></div><div class="field"><label>检索重排（可选）</label><label class="switch-row"><input type="checkbox" id="llmRerank"> 启用模型重排：检索后先让模型按相关度重排候选，再作答</label><span class="field-hint">默认关闭。开启后每次提问会多一次模型调用；模型不可用时自动回退为原始排序。</span></div></div><div class="manage-actions"><button class="primary" id="llmSave">保存并启用</button><button class="secondary" id="llmTest">测试连接</button><button class="secondary" id="llmClear">清除配置</button></div><div class="manage-stat-list" style="margin-top:18px"><div class="manage-stat"><span>当前回答模式</span><b id="llmMode">证据摘录</b></div><div class="manage-stat"><span>配置存储位置</span><b>本机 localStorage</b></div></div><div class="security-callout"><b>生成层安全约束：</b>无检索依据时不调用模型，直接走拒答；模型回答必须标注来源编号，越界引用与未在资料中出现的数值会被标记提醒。</div></section>
+        </div>
+      </section>
+      <section class="page" id="page-audit">
+        <div class="hero"><div><div class="eyebrow">合规留痕</div><h1>操作审计</h1><p>记录本机上的问答、文档查看与维护、备份导出和模型配置变更。记录只写入当前浏览器的 IndexedDB，可导出 JSON 交由合规人员归档。</p></div><div class="hero-side"><button class="secondary" id="auditExport">导出审计日志</button><button class="secondary" id="auditServer">查看服务端审计</button><button class="secondary" id="auditClear">清空日志</button></div></div>
+        <div class="audit-summary"><div class="manage-stat"><span>记录总数</span><b id="auditTotal">0</b></div><div class="manage-stat"><span>被拒绝操作</span><b id="auditDenied">0</b></div><div class="manage-stat"><span>当前演示身份</span><b id="auditRole">员工</b></div></div>
+        <div class="server-audit hidden" id="serverAuditPanel"></div>
+        <div class="audit-toolbar"><select class="filter-select" id="auditResultFilter" aria-label="按结果筛选审计"><option value="all">全部结果</option><option value="allowed">仅允许</option><option value="denied">仅拒绝</option></select><select class="filter-select" id="auditRoleFilter" aria-label="按身份筛选审计"><option value="all">全部身份</option><option value="employee">员工</option><option value="hr">人事</option><option value="manager">主管</option><option value="admin">管理员</option></select><select class="filter-select" id="auditActionFilter" aria-label="按操作类型筛选审计"><option value="all">全部操作</option></select><span class="audit-filter-note" id="auditFilterNote"></span></div>
+        <div class="audit-head"><span>时间</span><span>身份</span><span>操作</span><span>对象 / 详情</span><span>结果</span></div>
+        <div class="audit-list" id="auditList"></div>
+        <div class="footer-note">审计记录可用于事后追溯，但单机版本无法防止本地数据被清空或篡改。真实部署需将审计写入服务端不可篡改存储，并与身份认证系统绑定。</div>
+      </section>
+    </div>
+  </main>
+</div>
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal"><div class="modal-head"><h2 id="modalTitle">导入知识文档</h2><button class="close-btn" id="closeModal" aria-label="关闭">×</button></div><form id="docForm"><input type="hidden" id="editId"><div class="form-grid"><div class="field"><label for="docTitle">文档标题</label><input id="docTitle" required maxlength="120" placeholder="例如：差旅与费用报销制度"></div><div class="field"><label for="docCategory">知识分类</label><select id="docCategory"><option>人事制度</option><option>财务报销</option><option>办公流程</option><option>产品知识</option><option>其他</option></select></div><div class="field"><label for="docAudience">可见范围（原型演示）</label><select id="docAudience"><option value="all">所有员工</option><option value="hr">仅人事</option><option value="manager">仅主管</option></select></div><div class="field"><label for="docStatus">收录状态</label><select id="docStatus"><option value="active">启用，可用于检索</option><option value="inactive">停用，不参与检索</option></select></div><div class="field full" id="fileField"><label for="fileInput">从本机选择文档（可选）</label><input id="fileInput" type="file" accept=".txt,.md,.markdown,.csv,.json,.html,.htm,.docx,.pdf,text/plain,text/markdown,text/csv,application/json,text/html,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"><span class="field-hint">支持 TXT、MD、CSV、JSON、HTML（≤ 1 MB）与 DOCX、PDF（≤ 8 MB）；文件只在本机浏览器解析并保存，不会上传。可直接在下方粘贴正文。</span></div><div class="field full"><label for="docBody">正文内容</label><textarea id="docBody" required placeholder="粘贴制度条款、办事步骤或知识正文……"></textarea><span class="field-hint" id="bodyHint">至少填写一段可检索内容，最大 200,000 字符。</span></div></div><div class="modal-actions"><button class="secondary" type="button" id="cancelModal">取消</button><button class="primary" type="submit" id="saveDoc">保存到本地知识库</button></div></form></div></div>
+<div class="modal-backdrop" id="viewerBackdrop" role="dialog" aria-modal="true" aria-labelledby="viewerTitle"><div class="modal viewer-modal"><div class="modal-head"><h2 id="viewerTitle">知识文档</h2><button class="close-btn" id="viewerClose" aria-label="关闭文档">×</button></div><div class="doc-view-meta" id="viewerMeta"></div><div class="doc-view-body" id="viewerBody"></div><div class="modal-actions"><button class="secondary" type="button" id="viewerCopy">复制全文</button><button class="secondary" type="button" id="viewerDone">关闭</button></div></div></div>
+<div class="modal-backdrop" id="answerZoomBackdrop" role="dialog" aria-modal="true" aria-labelledby="answerZoomTitle"><div class="modal answer-zoom-modal"><div class="modal-head"><h2 id="answerZoomTitle">答案放大阅读</h2><button class="close-btn" id="answerZoomClose" aria-label="关闭放大答案">×</button></div><div class="doc-view-meta" id="answerZoomMeta"></div><div class="answer-zoom-body" id="answerZoomBody"></div><div class="modal-actions"><button class="secondary" type="button" id="answerZoomCopy">复制内容</button><button class="secondary" type="button" id="answerZoomDone">关闭</button></div></div></div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(() => {
+  "use strict";
+  const DB_NAME = "zhigui-local-knowledge";
+  const DB_VERSION = 2;
+  const MAX_FILE_BYTES = 1024 * 1024;
+  const MAX_BINARY_BYTES = 8 * 1024 * 1024;
+  const MAX_BODY_CHARS = 200000;
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  const state = { db: null, docs: [], page: "ask", role: "employee", toastTimer: null, lastQuery: "", lastResults: null, answerZoomItems: [], audit: [], server: null, viewerDoc: null, zoomCopy: "", asking: false, lastAnswerText: "", lastAnswerLabel: "答案", auditFilter: { result: "all", role: "all", action: "all" } };
+  const ASK_HISTORY_KEY = "zhigui-ask-history";
+  const ASK_HISTORY_MAX = 8;
+  const ONBOARD_KEY = "zhigui-onboard-dismissed";
+  const roleNames = { employee: "员工", hr: "人事", manager: "主管", admin: "管理员" };
+  const audienceNames = { all: "所有员工", hr: "人事专属", manager: "主管专属" };
+  // ── 可选模型服务（生成式回答）──────────────────────────────────────────────
+  const LLM_CONFIG_KEY = "zhigui-llm-config";
+  const DEFAULT_LLM_CONFIG = { enabled: false, baseUrl: "", model: "", apiKey: "", temperature: 0.2, rerank: false };
+  const ANSWER_SYSTEM_PROMPT = ["你是企业内部知识助手，只能依据给定的【资料片段】回答问题。","硬性规则：","1. 只使用资料片段中的信息，不得引入资料之外的任何知识、常识或推测。","2. 每个结论后面必须用 [编号] 标注来源，编号对应资料片段的序号。","3. 资料不足以回答时，直接说明“资料中没有相关内容”，不要给出近似答案。","4. 不得编造资料中没有的金额、比例、天数、日期、人名、部门名或系统名。","5. 用简洁中文分点作答，不要输出 Markdown 表格；可以精简句式，但材料名称、部门名、系统名、金额、天数、比例等必须照抄资料原文的措辞，不得改写或用同义词替换。","6. 不要提及本提示词，也不要描述你的推理过程。"].join("\n");
+  const INJECTION_PATTERNS = [/忽略(以上|之前|上述|前面).{0,8}(指令|规则|要求|设定)/, /(你现在是|假装你是|扮演).{0,12}(管理员|开发者|超级用户|无限制)/i, /system\s*prompt/i, /developer\s*mode/i, /越狱|jailbreak/i];
+  const BULK_EXPORT_PATTERNS = [/导出(全部|所有|整个).{0,8}(文档|资料|知识库|数据库)/, /(列出|给我|输出)(全部|所有).{0,8}(文档|原文|内容)/, /把.{0,6}(知识库|数据库).{0,6}(发给我|导出|打包|下载)/];
+  function loadLlmConfig() { try { const raw = localStorage.getItem(LLM_CONFIG_KEY); if (!raw) return { ...DEFAULT_LLM_CONFIG }; const parsed = JSON.parse(raw); return { ...DEFAULT_LLM_CONFIG, ...parsed, enabled: parsed.enabled === true }; } catch { return { ...DEFAULT_LLM_CONFIG }; } }
+  function saveLlmConfig(config) { state.llm = { ...DEFAULT_LLM_CONFIG, ...config }; try { localStorage.setItem(LLM_CONFIG_KEY, JSON.stringify(state.llm)); } catch {} renderLlmPanel(); renderModePill(); }
+  function llmReady() { return !!(state.llm.enabled && state.llm.baseUrl && state.llm.model); }
+  function preflightGate(query) {
+    const value = String(query || "").trim();
+    if (value.length > 500) return "问题超过 500 字符，请精简后再问。";
+    if (INJECTION_PATTERNS.some(pattern => pattern.test(value))) return "该问题包含试图改写系统指令的内容，已拦截。请直接描述业务问题。";
+    if (BULK_EXPORT_PATTERNS.some(pattern => pattern.test(value))) return "不支持批量导出知识库内容。如需备份请使用「资料与权限」页的导出功能，并按数据管理规定审批。";
+    return "";
+  }
+  function buildContext(results) { return results.slice(0, 3).map((item, index) => `[${index + 1}] 来源文档：${item.doc.title}\n${item.unitText || item.passage || ""}`).join("\n\n"); }
+  function verifyGenerated(text, sourceCount) {
+    const warnings = [];
+    const cited = [...String(text || "").matchAll(/\[(\d{1,2})\]/g)].map(match => Number(match[1]));
+    const invalid = [...new Set(cited.filter(number => number < 1 || number > sourceCount))];
+    if (invalid.length) warnings.push(`回答引用了不存在的来源编号 [${invalid.join("] [")}]，请以来源列表为准。`);
+    if (!cited.length) warnings.push("回答没有标注来源编号，建议对照来源原文核实。");
+    return warnings;
+  }
+  function ungroundedNumbers(text, results) {
+    const corpus = results.map(item => `${item.unitText || item.passage || ""}`).join("\n").replace(/\s+/g, "");
+    const pattern = /\d+(?:\.\d+)?\s*(?:元|万元|亿元|%|％|天|个月|年|次|个工作日|小时|分钟|人)/g;
+    const tokens = [...new Set((String(text || "").match(pattern) || []).map(token => token.replace(/\s+/g, "")))];
+    return tokens.filter(token => !corpus.includes(token));
+  }
+  async function requestGeneration(query, results, onDelta) {
+    const config = state.llm;
+    const endpoint = `${String(config.baseUrl).replace(/\/+$/, "")}/chat/completions`;
+    const headers = { "Content-Type": "application/json" };
+    if (config.apiKey) headers.Authorization = `Bearer ${config.apiKey}`;
+    const response = await fetch(endpoint, { method: "POST", headers, body: JSON.stringify({ model: config.model, temperature: Number(config.temperature) || 0, stream: true, messages: [{ role: "system", content: ANSWER_SYSTEM_PROMPT }, { role: "user", content: `【资料片段】\n${buildContext(results)}\n\n【用户问题】\n${query}` }] }) });
+    if (!response.ok) { const detail = await response.text().catch(() => ""); throw new Error(`模型服务返回 ${response.status}${detail ? `（${detail.slice(0, 140)}）` : ""}`); }
+    const contentType = response.headers.get("content-type") || "";
+    if (!response.body || !contentType.includes("text/event-stream")) {
+      const data = await response.json().catch(() => null);
+      const full = data?.choices?.[0]?.message?.content || data?.choices?.[0]?.text || "";
+      if (full) onDelta(full);
+      return full;
+    }
+    const reader = response.body.getReader(); const decoder = new TextDecoder(); let buffer = ""; let text = "";
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n"); buffer = lines.pop() ?? "";
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed.startsWith("data:")) continue;
+        const payload = trimmed.slice(5).trim();
+        if (!payload || payload === "[DONE]") continue;
+        try { const chunk = JSON.parse(payload); const delta = chunk.choices?.[0]?.delta?.content ?? chunk.choices?.[0]?.message?.content; if (delta) { text += delta; onDelta(text); } } catch {}
+      }
+    }
+    return text;
+  }
+  function renderModePill() {
+    const pill = $("#modePill"); if (!pill) return;
+    const on = llmReady();
+    pill.textContent = on ? `生成式 · ${state.llm.model}` : "证据摘录";
+    pill.title = on ? "已配置模型服务：回答由模型基于已收录资料生成，并强制标注来源" : "未配置模型服务：只返回原文证据，不做任何生成";
+    pill.classList.toggle("mode-on", on);
+  }
+  function renderLlmPanel() {
+    const base = $("#llmBaseUrl"); if (!base) return;
+    base.value = state.llm.baseUrl || "";
+    $("#llmModel").value = state.llm.model || "";
+    $("#llmApiKey").value = state.llm.apiKey || "";
+    $("#llmRerank").checked = state.llm.rerank === true;
+    $("#llmMode").textContent = llmReady() ? `生成式回答（${state.llm.model}）${state.llm.rerank ? " · 已开启重排" : ""}` : "证据摘录";
+  }
+  async function testLlmConnection() {
+    const baseUrl = $("#llmBaseUrl").value.trim(); const model = $("#llmModel").value.trim(); const apiKey = $("#llmApiKey").value.trim();
+    if (!baseUrl || !model) { showToast("请先填写接口地址与模型名称"); return; }
+    showToast("正在测试连接…");
+    try {
+      const response = await fetch(`${baseUrl.replace(/\/+$/, "")}/chat/completions`, { method: "POST", headers: { "Content-Type": "application/json", ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}) }, body: JSON.stringify({ model, messages: [{ role: "user", content: "ping" }], max_tokens: 8, stream: false }) });
+      showToast(response.ok ? "连接成功，可以保存并启用" : `连接失败：HTTP ${response.status}`);
+    } catch (error) { showToast(`连接失败：${error.message}`); }
+  }
+  // ── 可用模型列表（GET {baseUrl}/models）────────────────────────────────────
+  function modelListEndpoint(baseUrl) { return `${String(baseUrl || "").replace(/\/+$/, "")}/models`; }
+  function normalizeModelList(payload) {
+    const raw = Array.isArray(payload) ? payload
+      : Array.isArray(payload?.data) ? payload.data
+      : Array.isArray(payload?.models) ? payload.models
+      : Array.isArray(payload?.result) ? payload.result
+      : [];
+    return raw.map(entry => {
+      if (typeof entry === "string") return { id: entry.trim(), ownedBy: "", created: null, extra: "" };
+      const id = String(entry?.id || entry?.name || entry?.model || entry?.model_name || "").trim();
+      const ownedBy = String(entry?.owned_by || entry?.ownedBy || entry?.owner || entry?.provider || entry?.details?.family || entry?.publisher || "").trim();
+      const created = Number(entry?.created || entry?.created_at || 0) || null;
+      const details = entry?.details || {};
+      const extra = [];
+      const contextLength = entry?.context_length || entry?.context_window || entry?.max_context_tokens || details?.context_length || entry?.top_provider?.context_length;
+      if (contextLength) extra.push(`上下文 ${Number(contextLength).toLocaleString()} tokens`);
+      const maxTokens = entry?.max_tokens || entry?.max_output_tokens || details?.max_tokens;
+      if (maxTokens) extra.push(`最大输出 ${Number(maxTokens).toLocaleString()}`);
+      const size = Number(entry?.size_bytes ?? entry?.size ?? details?.size ?? 0) || null;
+      if (size) extra.push(`${(size / 1024 / 1024 / 1024).toFixed(1)} GB`);
+      const parameterSize = details?.parameter_size || entry?.parameter_size || entry?.parameters || entry?.param_size;
+      if (parameterSize) extra.push(`参数 ${String(parameterSize)}`);
+      const modality = entry?.architecture?.modality || (Array.isArray(entry?.modalities) ? entry.modalities.join("/") : "") || details?.format;
+      if (modality) extra.push(String(modality));
+      if (entry?.type && entry.type !== "model") extra.push(String(entry.type));
+      if (entry?.description) extra.push(String(entry.description).replace(/\s+/g, " ").slice(0, 60));
+      return { id, ownedBy, created, extra: extra.join(" · ") };
+    }).filter(item => item.id);
+  }
+  function describeModelDate(created) {
+    if (!created) return "";
+    const ms = created > 1e12 ? created : created * 1000;
+    const date = new Date(ms);
+    return Number.isNaN(date.getTime()) ? "" : new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "2-digit", day: "2-digit" }).format(date);
+  }
+  function renderModelList(models, note = "") {
+    const field = $("#llmModelField"); const list = $("#llmModelList"); const hint = $("#llmModelHint");
+    if (!field || !list) return;
+    if (!models.length) { field.classList.add("hidden"); list.innerHTML = ""; if (hint) hint.textContent = ""; return; }
+    field.classList.remove("hidden");
+    const current = $("#llmModel").value.trim();
+    list.innerHTML = models.map(model => {
+      const bits = [model.ownedBy ? `归属 ${model.ownedBy}` : "", describeModelDate(model.created) ? `创建于 ${describeModelDate(model.created)}` : "", model.extra].filter(Boolean).join(" · ");
+      return `<button type="button" class="model-item${model.id === current ? " picked" : ""}" data-action="pick-model" data-model="${esc(model.id)}"><span><span class="model-name">${esc(model.id)}</span><span class="model-meta">${esc(bits || "—")}</span></span><span class="model-badge">选用</span></button>`;
+    }).join("");
+    if (hint) hint.textContent = note || `共 ${models.length} 个可用模型。点击任意一项填入「模型名称」。`;
+  }
+  async function fetchModelList() {
+    const baseUrl = $("#llmBaseUrl").value.trim(); const apiKey = $("#llmApiKey").value.trim();
+    const hint = $("#llmModelHint");
+    if (!baseUrl) { showToast("请先填写接口地址（Base URL）"); $("#llmBaseUrl").focus(); return; }
+    const button = $("#llmFetchModels"); button.disabled = true; button.textContent = "拉取中…";
+    if (hint) hint.textContent = "正在请求 /models …";
+    try {
+      const response = await fetch(modelListEndpoint(baseUrl), { method: "GET", headers: { Accept: "application/json", ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}) } });
+      if (!response.ok) { const detail = await response.text().catch(() => ""); throw new Error(`HTTP ${response.status}${detail ? `（${detail.replace(/\s+/g, " ").slice(0, 120)}）` : ""}`); }
+      const payload = await response.json().catch(() => null);
+      const models = normalizeModelList(payload);
+      if (!models.length) {
+        renderModelList([]);
+        if (hint) hint.textContent = "响应中没有识别到模型条目。该接口可能不提供 /models，请手动填写模型名称后保存。";
+        showToast("接口未返回可识别的模型列表");
+        recordAudit("llm_models", { detail: "拉取模型列表：0 个（响应格式未识别）", result: "denied" });
+        return;
+      }
+      renderModelList(models);
+      showToast(`已拉取 ${models.length} 个可用模型`);
+      recordAudit("llm_models", { detail: `拉取模型列表：${models.length} 个（${models.slice(0, 3).map(m => m.id).join("、")}${models.length > 3 ? " 等" : ""}）` });
+    } catch (error) {
+      renderModelList([]);
+      if (hint) hint.textContent = `拉取失败：${error.message}。可以手动填写模型名称后直接保存。`;
+      showToast(`拉取失败：${error.message}`);
+      recordAudit("llm_models", { detail: `拉取模型列表失败：${error.message}`, result: "denied" });
+    } finally {
+      button.disabled = false; button.textContent = "拉取模型列表";
+    }
+  }
+  function pickModel(id) {
+    const input = $("#llmModel"); if (!input) return;
+    input.value = id;
+    $$("#llmModelList .model-item").forEach(item => item.classList.toggle("picked", item.dataset.model === id));
+    showToast(`已选择模型：${id}`);
+  }
+  // ── 可选：用模型对检索结果重排（失败静默回退）──────────────────────────────
+  async function rerankWithLLM(query, results) {
+    if (!state.llm.rerank || !llmReady() || results.length < 2) return results;
+    try {
+      const catalog = results.map((item, index) => `[${index + 1}] ${item.unitTitle || item.label || item.sectionTitle || item.doc.title}｜${item.doc.title}｜${String(item.unitText || item.passage || "").replace(/\s+/g, " ").slice(0, 120)}`).join("\n");
+      const response = await fetch(`${String(state.llm.baseUrl).replace(/\/+$/, "")}/chat/completions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...(state.llm.apiKey ? { Authorization: `Bearer ${state.llm.apiKey}` } : {}) },
+        body: JSON.stringify({ model: state.llm.model, temperature: 0, stream: false, messages: [{ role: "system", content: "你是检索结果重排器。根据用户问题，把候选片段按与问题的相关度从高到低排序。只输出一个 JSON 数组，元素是候选编号，例如 [2,1,3]。不要输出解释或任何其他文字。" }, { role: "user", content: `【用户问题】\n${query}\n\n【候选片段】\n${catalog}` }] })
+      });
+      if (!response.ok) return results;
+      const payload = await response.json().catch(() => null);
+      const text = String(payload?.choices?.[0]?.message?.content || "");
+      const order = (text.match(/\d+/g) || []).map(Number).filter(number => number >= 1 && number <= results.length);
+      if (!order.length) return results;
+      const seen = new Set(); const sorted = [];
+      for (const number of order) { if (seen.has(number)) continue; seen.add(number); sorted.push(results[number - 1]); }
+      for (let index = 0; index < results.length; index++) if (!seen.has(index + 1)) sorted.push(results[index]);
+      return sorted;
+    } catch { return results; }
+  }
+  // ── 可选：服务端模式（真实身份 + 服务端权限 + 追加式审计）────────────────────
+  // 连接本仓库附带的参考服务端后：文档在出网前按身份过滤、越权请求返回 403、
+  // 审计写入服务端 append-only JSONL 并带哈希链。未连接时保持纯本地行为。
+  const SERVER_SESSION_KEY = "zhigui-server-session";
+  const SERVER_AUDIT_LABELS = { login: "登录", open_document: "查看文档", import_document: "导入文档", edit_document: "编辑文档", toggle_document: "启停文档", delete_document: "移除文档", query: "知识问答", query_blocked: "问答被拦截", llm_config: "模型配置", llm_models: "拉取模型列表", export_backup: "导出备份", audit_export: "导出审计", audit_clear: "清空审计", audit_read: "读取审计", role_switch: "切换身份", copy_text: "复制内容" };
+  // 这些动作由服务端权威记录（服务端自己知道请求上下文），客户端不再重复上报，避免日志重复
+  const SERVER_AUTHORITATIVE = new Set(["login", "open_document", "import_document", "edit_document", "toggle_document", "delete_document"]);
+  function loadServerSession() { try { const raw = sessionStorage.getItem(SERVER_SESSION_KEY); const parsed = raw ? JSON.parse(raw) : null; return parsed && parsed.token && parsed.url ? parsed : null; } catch { return null; } }
+  function saveServerSession(value) { try { if (value) sessionStorage.setItem(SERVER_SESSION_KEY, JSON.stringify(value)); else sessionStorage.removeItem(SERVER_SESSION_KEY); } catch {} }
+  function serverReady() { return !!(state.server && state.server.token && state.server.url); }
+  function serverEndpoint(pathname) { return `${String(state.server.url).replace(/\/+$/, "")}${pathname}`; }
+  async function serverFetch(pathname, options = {}) {
+    const headers = { ...(options.body ? { "Content-Type": "application/json" } : {}), ...(serverReady() ? { Authorization: `Bearer ${state.server.token}` } : {}), ...(options.headers || {}) };
+    let response;
+    try { response = await fetch(serverEndpoint(pathname), { ...options, headers }); }
+    catch (error) { throw new Error(`无法连接服务端（${error.message}）。请确认已运行 node server/server.mjs。`); }
+    const payload = await response.json().catch(() => null);
+    if (!response.ok) { const error = new Error(payload?.error || `服务端返回 HTTP ${response.status}`); error.status = response.status; throw error; }
+    return payload;
+  }
+  function renderServerPanel() {
+    const status = $("#serverStatus"); if (!status) return;
+    const url = $("#serverUrl"); if (url && !url.value) url.value = state.server?.url || "http://127.0.0.1:8787";
+    if (serverReady()) {
+      status.className = "server-status on";
+      status.innerHTML = `<b>已连接服务端</b> · ${esc(state.server.label || "")}（${esc(state.server.username)}）· ${esc(state.server.url)}<br>可见范围由服务端判定：文档在出网前已按身份过滤，越权请求返回 403 并由服务端权威留痕。身份由登录决定，顶部下拉已锁定。`;
+    } else {
+      status.className = "server-status";
+      status.textContent = "当前为纯本地模式：可见范围只在前端过滤，身份靠顶部下拉切换，审计记录存于本机 IndexedDB（可被本机清空）。";
+    }
+    const select = $("#roleSelect");
+    if (select) { select.disabled = serverReady(); select.title = serverReady() ? "服务端模式下身份由登录决定，不能手动切换" : "仅用于演示角色筛选，不代表真实身份认证"; }
+    const connect = $("#serverConnect"); if (connect) connect.disabled = serverReady();
+    const disconnect = $("#serverDisconnect"); if (disconnect) disconnect.disabled = !serverReady();
+  }
+  async function refreshServerDocs() {
+    const data = await serverFetch("/api/documents");
+    state.docs = data.documents || [];
+    state.role = data.role;
+    state.server.label = data.label;
+    saveServerSession(state.server);
+    renderAll(); renderServerPanel();
+    return data;
+  }
+  async function connectServer() {
+    const url = $("#serverUrl").value.trim().replace(/\/+$/, "");
+    const username = $("#serverUser").value.trim();
+    const password = $("#serverPass").value;
+    if (!url) { showToast("请先填写服务端地址"); $("#serverUrl").focus(); return; }
+    if (!/^https?:\/\//i.test(url)) { showToast("服务端地址需以 http:// 或 https:// 开头"); return; }
+    if (!username || !password) { showToast("请填写用户名与口令"); return; }
+    const button = $("#serverConnect"); button.disabled = true; button.textContent = "连接中…";
+    state.server = { url, token: "" };
+    try {
+      const data = await serverFetch("/api/login", { method: "POST", body: JSON.stringify({ username, password }) });
+      state.server = { url, token: data.token, username: data.user.username, role: data.user.role, label: data.user.label };
+      saveServerSession(state.server);
+      $("#serverPass").value = "";
+      await refreshServerDocs();
+      showToast(`已连接服务端 · ${data.user.label}（${data.user.username}）`);
+    } catch (error) {
+      state.server = null; saveServerSession(null);
+      showToast(`连接失败：${error.message}`);
+    } finally { button.textContent = "连接并登录"; renderServerPanel(); }
+  }
+  async function disconnectServer() {
+    state.server = null; saveServerSession(null);
+    state.role = "employee"; if ($("#roleSelect")) $("#roleSelect").value = "employee";
+    try { await seedIfEmpty(); await loadDocs(); } catch { state.docs = []; renderAll(); }
+    renderServerPanel();
+    showToast("已断开服务端，回到纯本地模式");
+  }
+  async function showServerAudit() {
+    const panel = $("#serverAuditPanel"); if (!panel) return;
+    if (!serverReady()) { showToast("请先在「资料与权限」页连接服务端"); return; }
+    panel.classList.remove("hidden");
+    panel.innerHTML = `<h3>服务端审计日志</h3><p class="integrity">正在拉取…</p>`;
+    try {
+      const data = await serverFetch("/api/audit?limit=40");
+      const integrity = data.integrity || {};
+      const rows = (data.entries || []).map(entry => `<div class="server-row${entry.result === "denied" ? " denied" : ""}"><span>${esc(formatDateTime(entry.at))}</span><span>${esc(roleNames[entry.role] || entry.role || "—")}</span><span>${esc(SERVER_AUDIT_LABELS[entry.action] || entry.action)}</span><span title="${esc(entry.target || "")}">#${entry.seq} ${esc(entry.detail || entry.target || "—")}</span><span>${entry.result === "denied" ? "已拒绝" : "允许"}</span></div>`).join("");
+      panel.innerHTML = `<h3>服务端审计日志 · 追加式 + 哈希链</h3><p class="integrity ${integrity.ok ? "ok" : "bad"}">共 ${data.total} 条 · 哈希链校验：${integrity.ok ? "完整（逐条重算 sha256 一致）" : `异常 · 第 ${integrity.brokenAt} 条 —— ${esc(integrity.reason)}`}</p><div class="server-row head"><span>时间</span><span>身份</span><span>操作</span><span>对象 / 详情</span><span>结果</span></div>${rows || `<div class="server-row">暂无记录</div>`}`;
+    } catch (error) {
+      panel.innerHTML = `<h3>服务端审计日志</h3><p class="integrity bad">拉取失败：${esc(error.message)}</p>`;
+    }
+  }
+  state.llm = loadLlmConfig();
+  state.server = loadServerSession();
+  const seedDocs = [
+    { id: "demo-hr-leave", title: "员工休假管理办法（演示）", category: "人事制度", audience: "all", status: "active", source: "演示资料", body: "年假申请流程\n员工申请年假，应至少提前 3 个工作日在办公系统提交申请，选择休假日期并填写工作交接安排。直属主管审批通过后方可休假。\n\n年假额度\n员工当年年假天数以人事系统显示为准。未休年假处理按公司当年度正式通知执行。\n\n病假材料\n连续病假超过 2 个工作日的，应按公司正式要求补充医疗机构证明材料。具体材料要求如与最新通知不一致，以人事部门发布的最新制度为准。", createdAt: "2026-10-01T09:00:00.000Z", updatedAt: "2026-10-01T09:00:00.000Z" },
+    { id: "demo-finance-travel", title: "差旅与费用报销指引（演示）", category: "财务报销", audience: "all", status: "active", source: "演示资料", body: "差旅报销材料\n员工办理差旅费用报销时，应提交经审批的出差申请、合规票据及费用明细。住宿费需提供住宿发票和订单或入住凭证；交通费需提供对应的车票、行程凭证或电子客票凭证。\n\n报销流程\n第一步：在办公系统提交出差申请并取得审批。第二步：出差结束后整理票据和费用明细。第三步：进入费用报销模块填写报销单并上传材料。第四步：提交直属主管和财务审核。\n\n注意事项\n超出公司差旅标准的费用应在报销前取得额外审批。此演示资料不包含具体金额标准，请以公司正式财务制度及最新通知为准。", createdAt: "2026-10-01T09:00:00.000Z", updatedAt: "2026-10-01T09:00:00.000Z" },
+    { id: "demo-office-equipment", title: "办公设备申领流程（演示）", category: "办公流程", audience: "all", status: "active", source: "演示资料", body: "电脑设备申请\n员工因工作需要申请电脑或外设，应在办公系统提交设备申领单，说明设备类型、用途和期望到货时间。\n\n审批与领取\n申请由直属主管确认业务需要，随后由行政或 IT 资产管理员核对库存并安排发放。领用人需确认设备编号并签收。\n\n设备归还\n员工离职、岗位变动或设备更换时，应按 IT 资产管理员指引办理设备归还或交接。设备故障请通过 IT 服务台提交工单，不要自行拆机维修。", createdAt: "2026-10-01T09:00:00.000Z", updatedAt: "2026-10-01T09:00:00.000Z" },
+    { id: "demo-hr-onboarding", title: "入职手续办理清单（演示）", category: "人事制度", audience: "hr", status: "active", source: "演示资料", body: "新人入职办理\n新员工入职当天由人事核验录用材料、劳动合同签署状态及紧急联系人信息，并向员工说明考勤、休假与薪酬查询入口。\n\n账号和权限\n直属主管应在入职前确认岗位所需系统，按最小权限原则提交账号开通申请。岗位调整或离职时，应及时回收不再需要的权限。\n\n材料保存\n员工个人材料仅由经授权的人事人员按工作职责查阅和维护，不得通过个人邮箱或公开网盘传递。", createdAt: "2026-10-01T09:00:00.000Z", updatedAt: "2026-10-01T09:00:00.000Z" },
+    { id: "demo-manager-purchase", title: "部门采购审批说明（演示）", category: "办公流程", audience: "manager", status: "active", source: "演示资料", body: "部门采购申请\n部门主管发起采购时，应说明业务目标、数量、预算来源和期望交付时间，并在办公系统提交采购申请。涉及信息设备或软件服务的，应先征求 IT 与信息安全人员意见。\n\n审批流程\n采购申请按公司授权矩阵由相应负责人审批。未获审批前不得对外承诺采购或拆分订单。达到公司规定金额的采购需履行比价或招采流程；本演示资料不提供具体金额阈值。\n\n验收与归档\n货物或服务交付后由申请部门确认验收，保存合同、订单、发票和验收记录。", createdAt: "2026-10-01T09:00:00.000Z", updatedAt: "2026-10-01T09:00:00.000Z" }
+  ];
+  function esc(value) { return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch])); }
+  function formatDate(value) { const d = new Date(value); return Number.isNaN(d.getTime()) ? "日期未知" : new Intl.DateTimeFormat("zh-CN", { year:"numeric", month:"2-digit", day:"2-digit" }).format(d); }
+  function cleanInlineMarkdown(value) {
+    return String(value || "").replace(/!\[([^\]]*)\]\([^)]+\)/g,"$1").replace(/\[([^\]]+)\]\([^)]+\)/g,"$1").replace(/<[^>]*>/g,"").replace(/(`+)(.*?)\1/g,"$2").replace(/(\*\*|__|~~)(.*?)\1/g,"$2").replace(/\*([^*\n]+)\*/g,"$1").replace(/_([^_\n]+)_/g,"$1").replace(/\s{2,}/g," ").trim();
+  }
+  function cleanMarkdown(value) {
+    const lines=String(value||"").replace(/^\uFEFF/,"").replace(/\r\n?/g,"\n").split("\n"); const out=[]; let inFence=false;
+    for (let raw of lines) { const fence=raw.match(/^\s*(```+|~~~+)/); if (fence) { inFence=!inFence; continue; } if (inFence) { out.push(raw.trimEnd()); continue; }
+      raw=raw.replace(/^\s{0,3}#{1,6}\s*/,"").replace(/^\s{0,3}>\s?/ ,"");
+      if (/^\s*(?:---+|\*\*\*+|___+)\s*$/.test(raw)) { out.push(""); continue; }
+      if (/^\s*\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(raw)) continue;
+      raw=raw.replace(/^\s*[-+*]\s+/,"• ").replace(/^\s*(\d+)[.)]\s+/,"$1. ");
+      raw=raw.replace(/^\s*\|/ ,"").replace(/\|\s*$/ ,"").replace(/\s*\|\s*/g,"  ·  ");
+      out.push(cleanInlineMarkdown(raw));
+    }
+    return out.join("\n").replace(/[ \t]+\n/g,"\n").replace(/\n{3,}/g,"\n\n").trim();
+  }
+  function renderMarkdownBody(value) {
+    const lines=String(value||"").replace(/^\uFEFF/,"").replace(/\r\n?/g,"\n").split("\n"); const html=[]; let paragraph=[]; let listType=""; let listItems=[]; let inFence=false; let code=[];
+    const flushParagraph=()=>{if(paragraph.length){html.push(`<p>${esc(cleanInlineMarkdown(paragraph.join(" ")))}</p>`);paragraph=[];}};
+    const flushList=()=>{if(listItems.length){html.push(`<div class="doc-md-list">${listItems.map(item=>`<div><span>${item.marker}</span><p>${esc(cleanInlineMarkdown(item.text))}</p></div>`).join("")}</div>`);listItems=[];listType="";}};
+    for(const line of lines){const fence=line.match(/^\s*(```+|~~~+)/);if(fence){flushParagraph();flushList();if(inFence){html.push(`<pre class="doc-code">${esc(code.join("\n"))}</pre>`);code=[];}inFence=!inFence;continue;}if(inFence){code.push(line);continue;}
+      const heading=line.match(/^\s{0,3}(#{1,6})\s+(.+)$/);if(heading){flushParagraph();flushList();const level=Math.min(4,Number(heading[1].length));html.push(`<h${level+1} class="doc-md-heading">${esc(cleanInlineMarkdown(heading[2]))}</h${level+1}>`);continue;}
+      const bullet=line.match(/^\s*[-+*]\s+(.+)$/);const ordered=line.match(/^\s*\d+[.)]\s+(.+)$/);if(bullet||ordered){flushParagraph();const kind=bullet?"bullet":"ordered";if(listType&&listType!==kind)flushList();listType=kind;listItems.push({marker:bullet?"•":"›",text:(bullet||ordered)[1]});continue;}
+      if(!line.trim()){flushParagraph();flushList();continue;}flushList();paragraph.push(line.trim());
+    }
+    flushParagraph();flushList();if(code.length)html.push(`<pre class="doc-code">${esc(code.join("\n"))}</pre>`);return html.join("")||"<p>（文档正文为空）</p>";
+  }
+  function buildSections(value) {
+    const raw=String(value||"").replace(/^\uFEFF/,"").replace(/\r\n?/g,"\n");const lines=raw.split("\n");const headings=[];let inFence=false;
+    lines.forEach((line,index)=>{if(/^\s*(```+|~~~+)/.test(line)){inFence=!inFence;return;}if(!inFence){const match=line.match(/^\s{0,3}(#{1,6})\s+(.+)$/);if(match){const title=cleanInlineMarkdown(match[2]);const number=title.match(/^\s*(\d+(?:\.\d+)+)\b/)?.[1]||"";headings.push({index,title,level:match[1].length,number});}}});
+    const splitContent=(content,title,heading={})=>{
+      const cleaned=cleanMarkdown(content);if(!cleaned)return[];
+      const splitPlain=(text,baseLabel="")=>{
+        const blocks=text.split(/\n{2,}/).map(block=>block.trim()).filter(Boolean);const output=[];
+        for(let i=0;i<blocks.length;i++){
+          let label=baseLabel;let block=blocks[i];
+          if(!label&&block.length<72&&i+1<blocks.length&&!/[。！？；.!?]$/.test(block)){label=block;block=blocks[++i];}
+          if(block.length<=560){output.push({title,label,text:block,...heading});continue;}
+          const sentences=block.split(/(?<=[。！？；.!?])\s*/).filter(Boolean);let part="";
+          for(const sentence of sentences){if(part&&part.length+sentence.length>480){output.push({title,label,text:part.trim(),...heading});part="";label="";}part+=`${sentence} `;}
+          if(part.trim())output.push({title,label,text:part.trim(),...heading});
+        }
+        return output;
+      };
+      const lines=cleaned.split("\n");const marker=/^\s*(?:【|\[)?\s*(追问|问题|题目|问答|Q)\s*(\d+|[一二两三四五六七八九十]+)\s*(?:】|\])?\s*(.*)$/i;const groups=[];let prefix=[];let active=null;
+      for(const line of lines){const match=line.match(marker);if(match){if(active)groups.push(active);active={label:line.trim(),lines:[]};}else if(active)active.lines.push(line);else prefix.push(line);}
+      if(active)groups.push(active);
+      if(!groups.length)return splitPlain(cleaned);
+      const output=[];const before=cleanMarkdown(prefix.join("\n"));if(before)output.push(...splitPlain(before));
+      for(const group of groups){const body=cleanMarkdown(group.lines.join("\n"));if(body)output.push(...splitPlain(body,group.label));}
+      return output;
+    };
+    if(headings.length){
+      const sections=[];const stack=[];
+      for(let i=0;i<headings.length;i++){
+        const heading=headings[i];while(stack.length&&stack[stack.length-1].level>=heading.level)stack.pop();stack.push(heading);
+        const end=headings[i+1]?.index??lines.length;const breadcrumb=stack.map(item=>item.title).join(" › ");const numberedParent=[...stack].reverse().find(item=>item.number);const metadata={headingNumber:numberedParent?.number||"",headingTitle:numberedParent?.title||heading.title,headingLevel:numberedParent?.level||heading.level,headingContext:numberedParent&&numberedParent.index!==heading.index?heading.title:""};
+        sections.push(...splitContent(lines.slice(heading.index+1,end).join("\n"),breadcrumb,metadata));
+      }
+      if(headings[0].index>0)sections.unshift(...splitContent(lines.slice(0,headings[0].index).join("\n"),"文档摘要"));
+      return sections;
+    }
+    const blocks=cleanMarkdown(raw).split(/\n{2,}/).map(block=>block.trim()).filter(Boolean);const sections=[];
+    for(let i=0;i<blocks.length;i++){
+      let label="";let block=blocks[i];if(block.length<72&&i+1<blocks.length&&!/[。！？；.!?]$/.test(block)){label=block;block=blocks[++i];}
+      if(block.length<=560){sections.push({title:"",label,text:block});continue;}
+      const sentences=block.split(/(?<=[。！？；.!?])\s*/).filter(Boolean);let part="";
+      for(const sentence of sentences){if(part&&part.length+sentence.length>480){sections.push({title:"",label,text:part.trim()});part="";label="";}part+=`${sentence} `;}
+      if(part.trim())sections.push({title:"",label,text:part.trim()});
+    }
+    return sections.length?sections:[{title:"",label:"",text:cleanMarkdown(raw)}];
+  }
+  function showToast(message) { const el = $("#toast"); el.textContent = message; el.classList.add("show"); clearTimeout(state.toastTimer); state.toastTimer = setTimeout(() => el.classList.remove("show"), 2600); }
+  // ── 使用者体验辅助：剪贴板 / 加载态 / 提问历史 / 首次引导 / 拒答建议 ─────────
+  async function copyText(text, label = "内容") {
+    const value = String(text ?? "").trim();
+    if (!value) { showToast("没有可复制的内容"); return false; }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(value);
+      else { const area = document.createElement("textarea"); area.value = value; area.setAttribute("readonly", ""); area.style.cssText = "position:fixed;top:-1000px;opacity:0"; document.body.appendChild(area); area.select(); document.execCommand("copy"); area.remove(); }
+      showToast(`${label}已复制（${value.length} 字）`);
+      recordAudit("copy_text", { detail: `复制${label} · ${value.length} 字` });
+      return true;
+    } catch (error) { showToast(`复制失败：${error.message || "浏览器未授权剪贴板"}`); return false; }
+  }
+  function setAsking(on, note = "") {
+    state.asking = !!on;
+    const button = $("#askButton");
+    if (button) { button.disabled = !!on || !$("#questionInput").value.trim(); button.textContent = on ? "查询中…" : "查询答案"; }
+    const pane = $("#answerPane");
+    if (pane) pane.setAttribute("aria-busy", on ? "true" : "false");
+    const hint = $("#askHint");
+    if (hint) hint.textContent = on ? note : "";
+  }
+  function syncAskControls() {
+    const input = $("#questionInput"), clear = $("#questionClear"), button = $("#askButton");
+    const hasText = !!input.value.trim();
+    clear.classList.toggle("show", !!input.value);
+    if (!state.asking) button.disabled = !hasText;
+  }
+  function loadAskHistory() {
+    try { const raw = localStorage.getItem(ASK_HISTORY_KEY); const list = raw ? JSON.parse(raw) : []; return Array.isArray(list) ? list.filter(item => typeof item === "string" && item.trim()).slice(0, ASK_HISTORY_MAX) : []; }
+    catch { return []; }
+  }
+  function persistAskHistory(list) { try { localStorage.setItem(ASK_HISTORY_KEY, JSON.stringify(list.slice(0, ASK_HISTORY_MAX))); } catch {} renderAskHistory(); }
+  function rememberAsk(query) { const value = String(query || "").trim(); if (!value) return; const list = loadAskHistory().filter(item => item !== value); list.unshift(value); persistAskHistory(list); }
+  function clearAskHistory() { persistAskHistory([]); showToast("已清空提问历史"); }
+  function renderAskHistory() {
+    const row = $("#historyRow"); if (!row) return;
+    const list = loadAskHistory();
+    row.classList.toggle("hidden", !list.length);
+    row.innerHTML = list.length ? `<span class="row-label">最近提问</span>${list.map(item => `<button type="button" class="history-chip" data-history="${esc(item)}" title="${esc(item)}">${esc(item)}</button>`).join("")}<button type="button" class="history-clear" id="historyClear">清空历史</button>` : "";
+  }
+  function renderOnboard() {
+    const el = $("#onboard"); if (!el) return;
+    let dismissed = false;
+    try { dismissed = localStorage.getItem(ONBOARD_KEY) === "1"; } catch {}
+    el.classList.toggle("hidden", dismissed);
+  }
+  function dismissOnboard() { try { localStorage.setItem(ONBOARD_KEY, "1"); } catch {} const el = $("#onboard"); if (el) el.classList.add("hidden"); }
+  // 拒答时给出可点的替代入口：优先用当前身份可见的文档标题，比一句「换个问法」更有用。
+  function refuseSuggestions() {
+    const docs = state.docs.filter(doc => doc.status === "active" && visible(doc));
+    const titles = [...new Set(docs.map(doc => doc.title))].slice(0, 4);
+    const categories = [...new Set(docs.map(doc => doc.category))].slice(0, 3);
+    const chips = [...titles.map(title => ({ label: title, query: title })), ...categories.map(name => ({ label: `关于「${name}」`, query: name }))].slice(0, 5);
+    if (!chips.length) return "";
+    return `<div class="retry-block"><b>换个问法试试，或从这些已收录资料入手：</b><div class="retry-chips">${chips.map(chip => `<button type="button" class="retry-chip" data-query="${esc(chip.query)}">${esc(chip.label)}</button>`).join("")}</div></div>`;
+  }
+  function openDB() { return new Promise((resolve, reject) => { const request = indexedDB.open(DB_NAME, DB_VERSION); request.onupgradeneeded = () => { const db = request.result; if (!db.objectStoreNames.contains("documents")) db.createObjectStore("documents", { keyPath: "id" }); if (!db.objectStoreNames.contains("feedback")) db.createObjectStore("feedback", { keyPath: "id", autoIncrement: true }); if (!db.objectStoreNames.contains("audit")) db.createObjectStore("audit", { keyPath: "id", autoIncrement: true }); }; request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error); }); }
+  function transaction(store, mode, operation) { return new Promise((resolve, reject) => { const tx = state.db.transaction(store, mode); const req = operation(tx.objectStore(store)); tx.oncomplete = () => resolve(req?.result); tx.onerror = () => reject(tx.error); tx.onabort = () => reject(tx.error || new Error("本地事务中止")); }); }
+  async function loadDocs() { state.docs = await transaction("documents", "readonly", store => store.getAll()) || []; state.docs.sort((a,b) => String(b.updatedAt).localeCompare(String(a.updatedAt))); renderAll(); }
+  async function seedIfEmpty() { const count = await transaction("documents", "readonly", store => store.count()); if (count) return; const tx = state.db.transaction("documents", "readwrite"); const store = tx.objectStore("documents"); seedDocs.forEach(doc => store.put(doc)); await new Promise((resolve,reject) => { tx.oncomplete=resolve; tx.onerror=()=>reject(tx.error); }); }
+  // ── 访问策略（显式表，单一事实来源）─────────────────────────────────────────
+  const ACCESS_POLICY = {
+    employee: { label: "员工", audiences: ["all"] },
+    hr: { label: "人事", audiences: ["all", "hr"] },
+    manager: { label: "主管", audiences: ["all", "manager"] },
+    admin: { label: "管理员", audiences: ["all", "hr", "manager"] }
+  };
+  function canAccess(role, doc) { const policy = ACCESS_POLICY[role]; if (!policy) return false; return policy.audiences.includes(doc.audience); }
+  function authorize(doc, action = "查看") { if (canAccess(state.role, doc)) return { allowed: true, reason: "" }; return { allowed: false, reason: `当前演示身份「${roleNames[state.role]}」没有${action}该文档的权限（该文档可见范围：${audienceNames[doc.audience] || "所有员工"}）。真实部署中应由服务端返回 403。` }; }
+  function visible(doc) { return canAccess(state.role, doc); }
+  function renderPermissionTable() { const body = $("#permissionTableBody"); if (!body) return; const audiences = ["all", "hr", "manager"]; body.innerHTML = Object.entries(ACCESS_POLICY).map(([, policy]) => `<tr><td>${esc(policy.label)}</td>${audiences.map(audience => `<td>${policy.audiences.includes(audience) ? "可见" : "隐藏"}</td>`).join("")}</tr>`).join(""); }
+  // ── 操作审计 ───────────────────────────────────────────────────────────────
+  const AUDIT_LIMIT = 300;
+  const AUDIT_LABELS = { query: "知识问答", query_blocked: "问答被拦截", open_document: "查看文档", import_document: "导入文档", edit_document: "编辑文档", toggle_document: "启停文档", delete_document: "移除文档", export_backup: "导出备份", llm_config: "模型配置", llm_models: "拉取模型列表", audit_export: "导出审计", audit_clear: "清空审计", role_switch: "切换身份", copy_text: "复制内容" };
+  function formatDateTime(value) { const d = new Date(value); return Number.isNaN(d.getTime()) ? "时间未知" : new Intl.DateTimeFormat("zh-CN", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).format(d); }
+  function recordAudit(action, options = {}) {
+    const entry = { at: new Date().toISOString(), role: state.role, action, target: options.target || "", detail: options.detail || "", result: options.result || "allowed" };
+    state.audit = [entry, ...state.audit].slice(0, AUDIT_LIMIT);
+    renderAudit();
+    try { transaction("audit", "readwrite", store => store.add(entry)).catch(() => {}); } catch {}
+    // 服务端模式下同时上报，由服务端补全时间 / 身份 / IP 等权威字段后写入 append-only 日志。
+    // 与授权直接相关的动作（登录、打开文档、文档维护）由服务端自己记录，客户端不重复上报。
+    if (serverReady() && !SERVER_AUTHORITATIVE.has(action)) serverFetch("/api/events", { method: "POST", body: JSON.stringify({ action, target: entry.target, detail: entry.detail, result: entry.result }) }).catch(() => {});
+    return entry;
+  }
+  async function loadAudit() { try { const rows = await transaction("audit", "readonly", store => store.getAll()) || []; state.audit = rows.sort((a, b) => String(b.at).localeCompare(String(a.at))).slice(0, AUDIT_LIMIT); } catch { state.audit = []; } renderAudit(); }
+  function renderAudit() {
+    const list = $("#auditList"); if (!list) return;
+    $("#auditTotal").textContent = state.audit.length;
+    $("#auditDenied").textContent = state.audit.filter(item => item.result === "denied").length;
+    $("#auditRole").textContent = roleNames[state.role];
+    // 操作类型下拉按实际出现过的动作生成，避免给出永远筛不出结果的空选项
+    const actionSelect = $("#auditActionFilter");
+    if (actionSelect) {
+      const actions = [...new Set(state.audit.map(item => item.action))];
+      const current = state.auditFilter.action;
+      actionSelect.innerHTML = `<option value="all">全部操作</option>${actions.map(action => `<option value="${esc(action)}">${esc(AUDIT_LABELS[action] || action)}</option>`).join("")}`;
+      actionSelect.value = actions.includes(current) ? current : "all";
+      if (!actions.includes(current)) state.auditFilter.action = "all";
+    }
+    const filter = state.auditFilter;
+    const rows = state.audit.filter(item => (filter.result === "all" || item.result === filter.result) && (filter.role === "all" || item.role === filter.role) && (filter.action === "all" || item.action === filter.action)).slice(0, 40);
+    const note = $("#auditFilterNote");
+    if (note) {
+      const filtered = filter.result !== "all" || filter.role !== "all" || filter.action !== "all";
+      note.textContent = filtered ? `筛选后 ${rows.length} 条 / 共 ${state.audit.length} 条` : `显示最近 ${Math.min(40, state.audit.length)} 条 / 共 ${state.audit.length} 条`;
+    }
+    list.innerHTML = rows.length ? rows.map(item => `<div class="audit-row${item.result === "denied" ? " denied" : ""}"><span class="audit-time">${esc(formatDateTime(item.at))}</span><span class="audit-role">${esc(roleNames[item.role] || item.role)}</span><span class="audit-action">${esc(AUDIT_LABELS[item.action] || item.action)}</span><span class="audit-detail" title="${esc(item.target || "")}">${esc(item.detail || item.target || "—")}</span><span class="audit-result">${item.result === "denied" ? "已拒绝" : "允许"}</span></div>`).join("") : `<div class="audit-empty">${state.audit.length ? "当前筛选条件下没有匹配的记录，试试放宽条件。" : "暂无操作记录。提问、查看文档、导入导出等操作都会记录在这里。"}</div>`;
+  }
+  async function exportAudit() {
+    const payload = { format: "zhigui-audit-log-v1", exportedAt: new Date().toISOString(), role: state.role, entries: state.audit };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob); const anchor = document.createElement("a");
+    anchor.href = url; anchor.download = `zhigui-audit-${new Date().toISOString().slice(0, 10)}.json`; anchor.click(); URL.revokeObjectURL(url);
+    recordAudit("audit_export", { detail: `导出 ${state.audit.length} 条审计记录` });
+    showToast("审计日志已导出");
+  }
+  async function clearAudit() {
+    if (!confirm("确定清空本机审计日志吗？此操作不可撤销。")) return;
+    try { await transaction("audit", "readwrite", store => store.clear()); } catch {}
+    state.audit = []; renderAudit();
+    recordAudit("audit_clear", { detail: "清空全部审计记录" });
+    showToast("审计日志已清空");
+  }
+  function setPage(page) { state.page = page; $$(".nav button").forEach(btn => btn.classList.toggle("active", btn.dataset.page === page)); $$(".page").forEach(section => section.classList.toggle("active", section.id === `page-${page}`)); $("#crumbTitle").textContent = ({ask:"知识问答",docs:"知识文档",manage:"资料与权限",audit:"操作审计"})[page]; if (page === "docs") renderDocs(); if (page === "manage") { renderManage(); renderPermissionTable(); } if (page === "audit") renderAudit(); window.scrollTo({ top:0, behavior:"smooth" }); }
+  function renderAll() { renderStats(); renderDocs(); renderManage(); renderAudit(); renderPermissionTable(); }
+  function renderStats() { const active = state.docs.filter(d => d.status === "active" && visible(d)); const size = active.reduce((n,d) => n + (d.body?.length || 0),0); $("#statDocs").textContent = active.length; $("#statSize").textContent = size > 9999 ? `${(size/1000).toFixed(1)}k 字` : `${size} 字`; }
+  function renderManage() { $("#manageDocs").textContent = state.docs.length; $("#manageActive").textContent = state.docs.filter(d => d.status === "active").length; $("#manageRole").textContent = roleNames[state.role]; }
+  function renderDocs() { const query = $("#docSearch").value.trim().toLowerCase(); const category = $("#categoryFilter").value; const status = $("#statusFilter").value; const docs = state.docs.filter(d => { const text = `${d.title} ${d.category} ${cleanMarkdown(d.body)}`.toLowerCase(); return (!query || text.includes(query)) && (category === "all" || d.category === category) && (status === "all" || d.status === status); }); $("#docCount").textContent = `共 ${docs.length} 份文档 · 当前身份可见 ${state.docs.filter(visible).length} 份`; const grid = $("#docGrid"); if (!docs.length) { grid.innerHTML = `<div class="empty-docs">没有匹配的文档。可以调整筛选条件或导入新资料。</div>`; return; } grid.innerHTML = docs.map(d => `<article class="card doc-card${visible(d) ? "" : " restricted"}"><div class="doc-card-top"><div class="file-icon">文</div><div style="min-width:0;flex:1"><h3 class="doc-name">${esc(d.title)}</h3><div class="doc-meta"><span>${esc(d.category)}</span><span>·</span><span>更新于 ${formatDate(d.updatedAt)}</span><span>·</span><span>${(d.body||"").length.toLocaleString()} 字</span></div></div></div><p class="doc-summary">${esc(cleanMarkdown(d.body).replace(/\s+/g," ").slice(0,150))}</p><div class="tag-row"><div class="tags"><span class="tag">${esc(d.category)}</span><span class="tag access">${esc(audienceNames[d.audience] || "所有员工")}</span><span class="tag ${d.status === "active" ? "" : "off"}">${d.status === "active" ? "已启用" : "已停用"}</span>${visible(d) ? "" : `<span class="tag off">当前身份无权查看</span>`}</div><div class="doc-actions"><button data-action="source" data-id="${esc(d.id)}">查看</button><button data-action="edit" data-id="${esc(d.id)}">编辑</button><button data-action="toggle" data-id="${esc(d.id)}">${d.status === "active" ? "停用" : "启用"}</button><button data-action="delete" data-id="${esc(d.id)}">移除</button></div></div></article>`).join(""); }
+  function normalize(s) { return String(s || "").toLowerCase().replace(/[\s\p{P}\p{S}]+/gu, ""); }
+  // 同义词组：组内第一个为规范词，其余为变体。仅用于打分归一化，不改动原文展示。
+  const SYNONYM_GROUPS = [
+    ["工资", "薪资", "薪水", "薪酬", "月薪"],
+    ["社保", "社会保险", "五险一金"],
+    ["密码", "口令"],
+    ["调休", "补休"],
+    ["报销", "报账"],
+    ["差旅", "出差"],
+    ["离职", "辞职", "离岗"],
+    ["审批", "审核", "签批", "核准"],
+    ["材料", "资料", "单据", "凭证", "票据"],
+    ["预约", "预订"],
+    ["入职", "报到"],
+    ["年假", "年休假"],
+    ["病假", "病休"],
+    ["电脑", "计算机"]
+  ];
+  const SYNONYM_MAP = (() => { const map = new Map(); for (const group of SYNONYM_GROUPS) { const canonical = group[0]; for (const word of group) if (word !== canonical) map.set(word, canonical); } return map; })();
+  function applySynonyms(text) { let out = String(text || ""); for (const [variant, canonical] of SYNONYM_MAP) if (out.includes(variant)) out = out.split(variant).join(canonical); return out; }
+  // 疑问/功能短语整体删除（先删短语再删单字，避免“什么时候”被切成“时候”留下噪声）
+  const STOP_PHRASES = /什么时候|多长时间|多久|多少|哪些|哪个|哪里|几点|几号|几天|几次|为什么|怎么办|怎么样|怎样|怎么|如何|什么|请问|一下|关于|能否|是否|之后|之前|以后|以前|以及|并且|但是|因为|所以|时候/g;
+  // 只保留“不会破坏实义词”的虚字：如“归还/到场/对账/有效/在职”中的字一律不删
+  const STOP_CHARS = /与|和|及|或|的|是|了|吗|呢|我|你|他|她|它|把|被|从/g;
+  // 由两个功能字组成的 2-gram（如“可以”“需要”）纯属噪声，不参与打分
+  const FUNCTION_CHARS = new Set("的了是在对把被从到我你他她它吗呢与和及或有为就都也还需可要以能会");
+  function termsOf(query) {
+    const q = normalize(applySynonyms(query));
+    const cjk = (q.match(/[\u3400-\u9fff]+/g) || []).map(run => run.replace(STOP_PHRASES, "").replace(STOP_CHARS, ""));
+    const latin = (String(query).match(/[A-Za-z0-9]+/g) || []).filter(token => token.length >= 2 || /^[A-Z]$/.test(token)).map(token => token.toLowerCase());
+    const terms = new Set(latin);
+    for (const run of cjk) {
+      if (run.length === 1) { terms.add(run); continue; }
+      for (let i = 0; i < run.length - 1; i++) { const gram = run.slice(i, i + 2); if (FUNCTION_CHARS.has(gram[0]) && FUNCTION_CHARS.has(gram[1])) continue; terms.add(gram); }
+    }
+    return [...terms].filter(term => term.length > 0);
+  }
+  // 主题一致性：命中词若全部是通用词（审批/流程/申请…），说明只是词面撞车，不应作答
+  const GENERIC_TERMS = new Set(["流程", "批流", "审批", "审核", "签批", "申请", "规定", "要求", "办法", "标准", "条件", "材料", "时间", "部门", "公司", "员工", "内容", "相关", "制度", "管理", "使用", "处理", "办理", "提交", "情况", "问题", "系统"]);
+  function ordinalValue(value) { if(/^\d+$/.test(value))return Number(value);const map={一:1,二:2,两:2,三:3,四:4,五:5,六:6,七:7,八:8,九:9,十:10};if(value==="十")return 10;if(value.startsWith("十"))return 10+(map[value.slice(1)]||0);if(value.endsWith("十"))return (map[value[0]]||0)*10; if(value.includes("十")){const [t,u]=value.split("十");return (map[t]||0)*10+(map[u]||0);}return map[value]??null; }
+  function requestedOrdinal(query) { const value=String(query||"");const match=value.match(/(?:追问|问题|题目|答案|序号)\s*[#：:]?\s*(\d+|[一二两三四五六七八九十]+)/i)||value.match(/第\s*(\d+|[一二两三四五六七八九十]+)\s*(?:题|问|项|条)/);return match?ordinalValue(match[1]):null; }
+  function sectionOrdinal(section) { const text=`${section.title||""} ${section.label||""} ${section.text||""}`;const match=text.match(/(?:追问|问题|题目|答案|问答|Q)\s*#?\s*(\d+|[一二两三四五六七八九十]+)/i)||text.match(/第\s*(\d+|[一二两三四五六七八九十]+)\s*(?:题|问|项|条)/)||text.match(/^\s*[【\[]\s*(\d+)\s*[】\]]/);return match?ordinalValue(match[1]):null; }
+  function splitPassages(body) { return buildSections(body); }
+  function scorePassage(query, passage) { const q=normalize(applySynonyms(query)),p=normalize(applySynonyms(passage));const terms=termsOf(query);if(!terms.length)return{score:0,coverage:0,matches:0};const matches=terms.filter(term=>p.includes(normalize(term)));const coverage=matches.length/terms.length;const exact=q.length>2&&p.includes(q);const score=coverage*5+(exact?3:0)+Math.min(matches.length,8)*.16;return{score,coverage,matches:matches.length,exact}; }
+  function highlight(text, query) { const terms = termsOf(query).filter(t => t.length >= 2).sort((a,b)=>b.length-a.length).slice(0,8); if (!terms.length) return esc(text); let out = esc(text); for (const term of terms) { const safe = esc(term).replace(/[.*+?^${}()|[\]\\]/g,"\\$&"); try { out = out.replace(new RegExp(`(${safe})`,"ig"),"<mark>$1</mark>"); } catch {} } return out; }
+  function retrieve(query) {
+    const candidates=[];const targetOrdinal=requestedOrdinal(query);const terms=termsOf(query);const coreTerms=terms.filter(term=>!GENERIC_TERMS.has(term));const minimumCoverage=terms.length >= 4 ? 0.35 : terms.length >= 2 ? 0.5 : 0.75;
+    for(const doc of state.docs){
+      if(doc.status!=="active"||!visible(doc))continue;
+      const documentSections=splitPassages(doc.body);
+      for(const [sectionIndex,section] of documentSections.entries()){
+        const ordinal=sectionOrdinal(section);if(targetOrdinal!==null&&ordinal!==targetOrdinal)continue;
+        const match=scorePassage(query,section.headingTitle?`${section.headingTitle} ${section.text}`:section.text);const titleMatch=section.headingTitle?scorePassage(query,section.headingTitle):{matches:0,score:0,coverage:0};const labelMatch=section.label?scorePassage(query,section.label):{matches:0,score:0};
+        if(targetOrdinal!==null){candidates.push({doc,sectionTitle:section.title,label:section.label,ordinal,sectionIndex,passage:section.text,score:match.score+labelMatch.score*.15,coverage:match.coverage,matches:match.matches,exact:match.exact});continue;}
+        const threshold=ordinal !== null&&!section.headingNumber ? 0.75 : minimumCoverage;
+        if(match.matches&&(match.coverage>=threshold||match.exact)){
+          const coreText=coreTerms.length?normalize(applySynonyms(`${section.headingTitle||""} ${section.label||""} ${section.text||""}`)):"";
+          if(!coreTerms.length||coreTerms.some(term=>coreText.includes(normalize(term)))) candidates.push({doc,documentSections,sectionTitle:section.title,label:section.label,headingNumber:section.headingNumber,headingTitle:section.headingTitle,ordinal,sectionIndex,passage:section.text,score:match.score+titleMatch.score*.5+Math.min(labelMatch.score*.08,.25),coverage:match.coverage,titleCoverage:titleMatch.coverage||0,matches:match.matches,exact:match.exact});
+        }
+      }
+    }
+    candidates.sort((a,b)=>b.score-a.score||(b.titleCoverage||0)-(a.titleCoverage||0)||b.coverage-a.coverage||b.passage.length-a.passage.length);
+    const picked=[];const seen=new Set();const perDocument=new Map();const bestCoverage=candidates.reduce((max,item)=>Math.max(max,item.coverage||0),0);const siblingCoverage=bestCoverage*.8;
+    for(const item of candidates){
+      if(targetOrdinal===null&&!item.exact&&(item.coverage||0)<siblingCoverage)continue;
+      const unitMatch=String(item.headingNumber||"").match(/^\d+(?:\.\d+)*$/);const unit=unitMatch?.[0]||"";const key=unit?`${item.doc.id}:unit:${unit}`:`${item.doc.id}:${item.sectionIndex}`;
+      if(seen.has(key)||(perDocument.get(item.doc.id)||0)>=2)continue;
+      seen.add(key);perDocument.set(item.doc.id,(perDocument.get(item.doc.id)||0)+1);
+      if(unit){
+        const unitSections=item.documentSections.filter(section=>String(section.headingNumber||"")===unit);const blocks=new Map();
+        for(const section of unitSections){const context=section.label?"":section.headingContext||"";const blockKey=`${context}::${section.label||""}`;if(!blocks.has(blockKey))blocks.set(blockKey,{context,label:section.label||"",texts:[]});blocks.get(blockKey).texts.push(section.text);}
+        const unitText=[...blocks.values()].map(block=>`${block.context?`${block.context}\n`:""}${block.label?`${block.label}\n`:""}${block.texts.join("\n")}`).join("\n\n");const unitTitle=item.headingTitle||unit;
+        picked.push({...item,sectionTitle:unitTitle,headingTitle:unitTitle,unitNumber:unit,unitTitle,unitText,passage:unitText});
+      }else picked.push(item);
+      if(picked.length===5)break;
+    }
+    return picked;
+  }
+  async function answerQuery() {
+    const query=$("#questionInput").value.trim();if(!query){showToast("先输入一个想查询的问题");$("#questionInput").focus();return;}
+    state.lastQuery=query;rememberAsk(query);const pane=$("#answerPane");
+    const blocked=preflightGate(query);
+    if(blocked){$("#resultStatus").textContent="已被安全策略拦截";state.answerZoomItems=[];state.lastResults=null;recordAudit("query_blocked",{detail:query,result:"denied"});pane.innerHTML=`<div class="notice" style="padding:17px"><div class="notice-title">查询已被安全策略拦截</div><p>${esc(blocked)}</p></div>`;setAsking(false);return;}
+    setAsking(true,"正在检索已收录资料…");
+    const target=requestedOrdinal(query);let results=retrieve(query);
+    const bestCoverage=results[0]?.coverage||0;const shouldRefuse=!results.length||(target===null&&bestCoverage<.24);
+    if(!shouldRefuse&&results.length>1&&state.llm.rerank&&llmReady()){$("#resultStatus").textContent="正在按相关度重排…";results=await rerankWithLLM(query,results);}
+    $("#resultStatus").textContent=shouldRefuse?"未找到足够依据":`找到 ${results.length} 条证据`;
+    if(shouldRefuse){const emptyText=target!==null?`资料中没有找到序号 ${target} 对应的问答。请检查题号或补充带有“追问${target} / 问题${target}”标记的资料。`:`在当前身份可见且已启用的资料中，没有找到与“${esc(query)}”足够匹配的内容。为避免编造，不生成推测性答案。你可以换个问法，或联系资料维护人员补充/核实制度。`;state.answerZoomItems=[];state.lastResults=null;recordAudit("query",{detail:`${query}（无匹配依据，已拒答）`});pane.innerHTML=`<div class="notice" style="padding:17px"><div class="notice-title">暂未找到足够依据</div><p>${esc(emptyText)}</p></div>${refuseSuggestions()}`;setAsking(false);return;}
+    recordAudit("query",{detail:`${query}（${llmReady()?"生成式":"证据摘录"}${state.llm.rerank&&llmReady()?"+重排":""}，${results.length} 条证据）`});
+    if(llmReady()){runGeneration(query,results,target);return;}
+    renderEvidenceAnswer(query,results,target);
+    setAsking(false);
+  }
+  function bodyOfResult(result){return result.unitText||result.passage;}
+  function renderSourceList(best,query){return best.map((r,i)=>{const body=bodyOfResult(r);const excerpt=body.length>420?`${body.slice(0,420)}…`:body;return `<div class="source-item"><div class="source-top"><div><div class="source-title">[${i+1}] ${esc(r.doc.title)}</div><div class="source-meta">${esc(r.doc.category)}${r.sectionTitle?` · ${esc(r.sectionTitle)}`:r.label?` · ${esc(r.label)}`:""} · 更新于 ${formatDate(r.doc.updatedAt)} · 匹配度 ${(r.coverage*100).toFixed(0)}%${r.titleCoverage>0?` · 标题匹配 ${(r.titleCoverage*100).toFixed(0)}%`:""}</div></div><button class="source-open" data-action="source" data-id="${esc(r.doc.id)}">查看文档 →</button></div><p class="source-excerpt">${highlight(excerpt,query)}</p></div>`;}).join("");}
+  function answerActionsHtml(){
+    return `<div class="answer-actions"><div class="left"><button type="button" class="ghost-link" data-action="copy-answer">复制${esc(state.lastAnswerLabel||"答案")}</button><button type="button" class="ghost-link" data-action="reset-answer">重新提问</button></div><span class="copied-note" id="copyNote" role="status"></span></div>`;
+  }
+  function copyAnswerPayload(){
+    const text=String(state.lastAnswerText||"").trim();
+    if(!text){showToast("还没有可复制的答案");return;}
+    copyText(text,state.lastAnswerLabel||"答案");
+  }
+  function resetAnswerPane(){
+    const pane=$("#answerPane");
+    if(pane)pane.innerHTML=`<div class="empty-state"><div class="empty-icon">⌕</div><strong>答案将从已收录资料中检索</strong><p>输入问题后查看匹配段落及文档来源。当前版本采用证据检索，不会让模型补写资料中没有的内容。</p></div>`;
+    $("#resultStatus").textContent="等待提问";
+    state.lastResults=null;state.answerZoomItems=[];state.lastAnswerText="";
+    $("#questionInput").focus();
+  }
+  function renderEvidenceAnswer(query,results,target,errorNote=""){
+    const pane=$("#answerPane");const best=target!==null?results:results.slice(0,3);
+    state.lastResults={query,results,target};
+    state.answerZoomItems=best.map((r,i)=>({title:r.unitTitle||r.label||r.sectionTitle||`相关资料 ${i+1}`,text:bodyOfResult(r),source:r.doc.title}));
+    state.lastAnswerLabel="证据原文";
+    state.lastAnswerText=best.map((r,i)=>`【${i+1}】${r.unitTitle||r.label||r.sectionTitle||"相关资料"}\n${bodyOfResult(r)}\n（来源：${r.doc.title}）`).join("\n\n");
+    const answerParts=best.map((r,i)=>{const title=r.unitTitle||r.label||r.sectionTitle||`相关资料 ${i+1}`;const content=`<span class="answer-text">${esc(bodyOfResult(r))}</span>`;return `<button type="button" class="answer-part answer-zoom-trigger" data-action="zoom-answer" data-answer-index="${i}" aria-label="点击放大查看答案：${esc(title)}"><span class="answer-part-title">${esc(title)}${r.unitNumber?" · 完整小节":""}</span>${content}<span class="zoom-hint">点击放大查看完整答案</span></button>`;}).join("");
+    pane.innerHTML=`<div class="answer-result">${errorNote?`<div class="answer-error">${esc(errorNote)}</div>`:""}<div class="result-label"><span>✓</span>${target!==null?`按序号 ${target} 匹配到答案`:"依据已收录资料 · 按编号小节整理的原文证据"}</div><div class="answer-parts">${answerParts}</div>${answerActionsHtml()}<div class="answer-caveat">点击任一答案可放大阅读。每个编号小节（如 1.1、1.2）各自独立成条答案，只展示与问题或指定序号匹配的内容；请以正式制度及最新通知为准。</div><div class="sources">${renderSourceList(best,query)}</div><div class="feedback"><span>这条资料对你有帮助吗？</span><button data-feedback="yes">有帮助</button><button data-feedback="no">需要改进</button></div></div>`;
+  }
+  async function runGeneration(query,results,target){
+    const pane=$("#answerPane");const best=target!==null?results:results.slice(0,3);
+    state.lastResults={query,results,target};
+    state.answerZoomItems=best.map((r,i)=>({title:r.unitTitle||r.label||r.sectionTitle||`相关资料 ${i+1}`,text:bodyOfResult(r),source:r.doc.title}));
+    state.lastAnswerLabel="模型回答";state.lastAnswerText="";
+    pane.innerHTML=`<div class="answer-result"><div class="result-label"><span>✓</span>${target!==null?`按序号 ${target} 匹配到答案`:"生成式回答 · 仅依据已收录资料"}<button type="button" class="ghost-link" data-action="show-source">查看原文证据</button></div><button type="button" class="answer-part answer-generated-part answer-zoom-trigger" data-action="zoom-answer" data-answer-index="0" aria-label="点击放大查看生成回答与来源原文"><div class="answer-generated" id="generatedBody"><div class="ask-loading"><p class="loading-note">正在依据 ${best.length} 条资料生成回答…</p><div class="skeleton"></div><div class="skeleton w-90"></div><div class="skeleton w-70"></div></div></div><span class="zoom-hint">点击放大查看生成回答与来源原文</span></button><div class="gen-warnings" id="genWarnings"></div>${answerActionsHtml()}<div class="answer-caveat">回答由模型基于上述来源生成，只使用已收录资料。可点击上方回答放大对照原文，或点「查看原文证据」切换为逐字原文；请以正式制度及最新通知为准。</div><div class="sources">${renderSourceList(best,query)}</div><div class="feedback"><span>这条资料对你有帮助吗？</span><button data-feedback="yes">有帮助</button><button data-feedback="no">需要改进</button></div></div>`;
+    $("#resultStatus").textContent="正在生成…";
+    setAsking(true,"正在生成回答…");
+    const body=$("#generatedBody");
+    try{
+      const text=await requestGeneration(query,best,partial=>{body.innerHTML=renderMarkdownBody(partial);});
+      if(!String(text||"").trim())throw new Error("模型没有返回内容");
+      body.innerHTML=renderMarkdownBody(text);
+      state.answerZoomItems[0]=zoomItemForGeneration(query,text,best);
+      state.lastAnswerText=text;
+      const warnings=verifyGenerated(text,best.length);const ungrounded=ungroundedNumbers(text,best);
+      if(ungrounded.length)warnings.push(`以下数值未在来源资料中出现，请核实后再引用：${ungrounded.join("、")}`);
+      if(warnings.length)$("#genWarnings").innerHTML=warnings.map(item=>`<div class="gen-warning">⚠ ${esc(item)}</div>`).join("");
+      $("#resultStatus").textContent=`已生成 · ${best.length} 条来源`;
+    }catch(error){
+      renderEvidenceAnswer(query,results,target,`模型服务调用失败：${error.message}。已自动回退为证据摘录模式。`);
+      $("#resultStatus").textContent="生成失败，已回退为证据摘录";
+    }finally{setAsking(false);}
+  }
+  function openModal(doc = null) { $("#docForm").reset(); $("#editId").value = doc?.id || ""; $("#modalTitle").textContent = doc ? "编辑知识文档" : "导入知识文档"; $("#saveDoc").textContent = doc ? "保存修改" : "保存到本地知识库"; $("#docTitle").value = doc?.title || ""; $("#docCategory").value = doc?.category || "其他"; $("#docAudience").value = doc?.audience || "all"; $("#docStatus").value = doc?.status || "active"; $("#docBody").value = doc?.body || ""; $("#fileField").classList.toggle("hidden", !!doc); $("#bodyHint").textContent = doc ? "修改正文会更新本地副本，当前演示资料不连接原始文件。" : "至少填写一段可检索内容，最大 200,000 字符。"; $("#modalBackdrop").classList.add("open"); setTimeout(() => $("#docTitle").focus(),50); }
+  function closeModal() { $("#modalBackdrop").classList.remove("open"); $("#fileInput").value = ""; }
+  // ── 二进制文档解析（DOCX / PDF，纯前端、零外部依赖）────────────────────────
+  function baseName(name) { return String(name || "").replace(/\.[^.]+$/, ""); }
+  function decodeXmlEntities(value) { return String(value || "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code))).replace(/&amp;/g, "&"); }
+  async function inflate(bytes, format) {
+    const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream(format));
+    return new Uint8Array(await new Response(stream).arrayBuffer());
+  }
+  // DOCX = ZIP，直接读中央目录定位 word/document.xml
+  function readZipDirectory(buffer) {
+    const view = new DataView(buffer); const bytes = new Uint8Array(buffer); const entries = {};
+    let eocd = -1;
+    for (let i = bytes.length - 22; i >= Math.max(0, bytes.length - 66000); i--) { if (view.getUint32(i, true) === 0x06054b50) { eocd = i; break; } }
+    if (eocd < 0) return entries;
+    const count = view.getUint16(eocd + 10, true); let offset = view.getUint32(eocd + 16, true);
+    for (let index = 0; index < count && offset + 46 <= bytes.length; index++) {
+      if (view.getUint32(offset, true) !== 0x02014b50) break;
+      const method = view.getUint16(offset + 10, true);
+      const compressedSize = view.getUint32(offset + 20, true);
+      const nameLength = view.getUint16(offset + 28, true);
+      const extraLength = view.getUint16(offset + 30, true);
+      const commentLength = view.getUint16(offset + 32, true);
+      const localOffset = view.getUint32(offset + 42, true);
+      const name = new TextDecoder("utf-8").decode(bytes.subarray(offset + 46, offset + 46 + nameLength));
+      if (view.getUint32(localOffset, true) === 0x04034b50) {
+        const dataStart = localOffset + 30 + view.getUint16(localOffset + 26, true) + view.getUint16(localOffset + 28, true);
+        entries[name] = { method, compressedSize, dataStart };
+      }
+      offset += 46 + nameLength + extraLength + commentLength;
+    }
+    return entries;
+  }
+  function docxXmlToMarkdown(xml) {
+    const paragraphs = String(xml || "").split(/<w:p[ >]/).slice(1);
+    const lines = [];
+    for (const chunk of paragraphs) {
+      const body = chunk.split("</w:p>")[0];
+      const style = body.match(/<w:pStyle[^>]*w:val="([^"]+)"/);
+      const styleName = style ? style[1] : "";
+      const level = /^Heading(\d)$/i.exec(styleName)?.[1] || /^标题\s*(\d)$/.exec(styleName)?.[1] || "";
+      const text = [...body.matchAll(/<w:t[^>]*>([\s\S]*?)<\/w:t>/g)].map(match => decodeXmlEntities(match[1])).join("");
+      if (!text.trim()) { lines.push(""); continue; }
+      lines.push(level ? `${"#".repeat(Math.min(6, Number(level) || 1))} ${text.trim()}` : text.trim());
+    }
+    return lines.join("\n").replace(/\n{3,}/g, "\n\n").trim();
+  }
+  async function extractDocxText(buffer) {
+    const entry = readZipDirectory(buffer)["word/document.xml"];
+    if (!entry) throw new Error("这不是有效的 DOCX 文件（缺少 word/document.xml）");
+    const raw = new Uint8Array(buffer, entry.dataStart, entry.compressedSize);
+    const bytes = entry.method === 0 ? raw : await inflate(raw, "deflate-raw");
+    return docxXmlToMarkdown(new TextDecoder("utf-8").decode(bytes));
+  }
+  // PDF：解 FlateDecode 流 → 提取文本操作符 → 用 ToUnicode CMap 映射（尽力而为）
+  function latin1(bytes) { let out = ""; const chunk = 8192; for (let i = 0; i < bytes.length; i += chunk) out += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk)); return out; }
+  function parsePdfCMap(text) {
+    const map = new Map();
+    const hexToText = hex => { let out = ""; const clean = String(hex || "").replace(/[^0-9A-Fa-f]/g, ""); for (let i = 0; i + 4 <= clean.length; i += 4) out += String.fromCharCode(parseInt(clean.slice(i, i + 4), 16)); return out; };
+    for (const block of text.matchAll(/beginbfchar([\s\S]*?)endbfchar/g)) for (const pair of block[1].matchAll(/<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>/g)) map.set(parseInt(pair[1], 16), hexToText(pair[2]));
+    for (const block of text.matchAll(/beginbfrange([\s\S]*?)endbfrange/g)) {
+      for (const range of block[1].matchAll(/<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>/g)) {
+        const start = parseInt(range[1], 16); const end = parseInt(range[2], 16); const target = parseInt(range[3], 16);
+        if (!Number.isFinite(start) || !Number.isFinite(end) || end < start || end - start > 65535) continue;
+        for (let code = start; code <= end; code++) map.set(code, String.fromCharCode(target + (code - start)));
+      }
+    }
+    return map;
+  }
+  function decodePdfLiteral(raw) { return String(raw || "").replace(/\\([nrtbf()\\]|\d{1,3})/g, (_, esc) => { if (esc === "n") return "\n"; if (esc === "r") return "\r"; if (esc === "t") return "\t"; if (/^\d+$/.test(esc)) return String.fromCharCode(parseInt(esc, 8) & 0xff); return esc; }); }
+  function mapPdfHex(hex, cmap) {
+    const clean = String(hex || "").replace(/[^0-9A-Fa-f]/g, ""); let out = "";
+    for (let i = 0; i + 4 <= clean.length; i += 4) {
+      const code = parseInt(clean.slice(i, i + 4), 16);
+      if (cmap.has(code)) out += cmap.get(code);
+      else if (code >= 32 && code < 127) out += String.fromCharCode(code);
+    }
+    return out;
+  }
+  function extractPdfStrings(content, cmap) {
+    const pieces = [];
+    const tokens = content.match(/\((?:\\.|[^\\()])*\)|<[0-9A-Fa-f\s]+>|\bTd\b|\bTD\b|\bT\*\b|\bET\b/g) || [];
+    for (const token of tokens) {
+      if (token.startsWith("(")) pieces.push(decodePdfLiteral(token.slice(1, -1)));
+      else if (token.startsWith("<")) pieces.push(mapPdfHex(token.slice(1, -1), cmap));
+      else pieces.push("\n");
+    }
+    return pieces.join("");
+  }
+  function readableRatio(text) {
+    const value = String(text || "");
+    if (!value.length) return 0;
+    return (value.match(/[\u4e00-\u9fff\u3000-\u303f\uFF00-\uFFEFA-Za-z0-9，。、；：！？（）《》\s]/g) || []).length / value.length;
+  }
+  async function extractPdfText(buffer) {
+    const bytes = new Uint8Array(buffer); const latin = latin1(bytes);
+    const streams = []; const pattern = /stream\r?\n/g; let match;
+    while ((match = pattern.exec(latin))) {
+      const start = match.index + match[0].length;
+      const end = latin.indexOf("endstream", start);
+      if (end < 0) break;
+      const dictStart = latin.lastIndexOf("<<", match.index);
+      streams.push({ start, end, flate: /FlateDecode/.test(dictStart >= 0 ? latin.slice(dictStart, match.index) : "") });
+      pattern.lastIndex = end;
+    }
+    const decoded = [];
+    for (const stream of streams) {
+      const raw = bytes.subarray(stream.start, stream.end);
+      if (!stream.flate) { decoded.push(latin1(raw)); continue; }
+      try { decoded.push(new TextDecoder("latin1").decode(await inflate(raw, "deflate"))); } catch {}
+    }
+    const cmap = new Map();
+    for (const text of decoded) for (const [key, value] of parsePdfCMap(text)) if (!cmap.has(key)) cmap.set(key, value);
+    return extractPdfStrings(decoded.join("\n"), cmap).replace(/[ \t]{2,}/g, " ").replace(/\n{3,}/g, "\n\n").trim();
+  }
+  async function extractTextFromFile(file) {
+    const ext = String(file.name).split(".").pop().toLowerCase();
+    const supported = ["txt", "md", "markdown", "csv", "json", "html", "htm", "docx", "pdf"];
+    if (!supported.includes(ext)) throw new Error("当前支持 TXT、Markdown、CSV、JSON、HTML、DOCX、PDF");
+    const binary = ext === "docx" || ext === "pdf";
+    if (file.size > (binary ? MAX_BINARY_BYTES : MAX_FILE_BYTES)) throw new Error(binary ? "单个 DOCX / PDF 文件最大 8 MB" : "单个文本文件最大 1 MB");
+    if (binary) {
+      const buffer = await file.arrayBuffer();
+      if (ext === "docx") {
+        const text = await extractDocxText(buffer);
+        if (!text.trim()) throw new Error("未能从该 DOCX 中提取到文本，请确认文件未加密或受保护");
+        return { body: text, title: baseName(file.name) };
+      }
+      const text = await extractPdfText(buffer);
+      if (text.replace(/\s/g, "").length < 20 || readableRatio(text) < 0.5) throw new Error("该 PDF 未提取到足够的可读文本（可能是扫描件、加密文档或使用了特殊字体编码），建议先转成文本再导入");
+      return { body: text, title: baseName(file.name) };
+    }
+    const value = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onerror = () => reject(new Error("文件读取失败")); reader.onload = () => resolve(String(reader.result || "")); reader.readAsText(file, "UTF-8"); });
+    if (ext === "html" || ext === "htm") { const parsed = new DOMParser().parseFromString(value, "text/html"); parsed.querySelectorAll("script,style,noscript").forEach(node => node.remove()); return { body: parsed.body.textContent || "", title: baseName(file.name) }; }
+    return { body: value, title: baseName(file.name) };
+  }
+  async function saveDocument(event) { event.preventDefault(); const id = $("#editId").value; let body = $("#docBody").value.trim(); let title = $("#docTitle").value.trim(); const file = $("#fileInput").files[0]; if (!id && file) { try { const loaded = await extractTextFromFile(file); if (!body) body = loaded.body.trim(); if (!title) title=loaded.title; } catch (e) { showToast(e.message); return; } } if (!body) { showToast("请填写或导入文档正文"); return; } if (body.length > MAX_BODY_CHARS) { showToast("正文超过 200,000 字符，请拆分后导入"); return; }
+    if (serverReady()) {
+      // 服务端模式：写操作也走服务端做 RBAC（只有管理员能新增 / 修改），越权返回 403
+      try {
+        await serverFetch("/api/documents", { method: "POST", body: JSON.stringify({ id: id || undefined, title: title || "未命名知识文档", category: $("#docCategory").value, audience: $("#docAudience").value, status: $("#docStatus").value, body, source: file?.name || "服务端录入" }) });
+        await refreshServerDocs(); closeModal();
+        showToast(id ? "文档修改已保存到服务端" : "文档已加入服务端知识库");
+      } catch (error) { showToast(error.message); }
+      return;
+    }
+    const old = id ? state.docs.find(d=>d.id===id) : null; const doc = { id:id || `doc-${crypto.randomUUID()}`, title:title || "未命名知识文档", category:$("#docCategory").value, audience:$("#docAudience").value, status:$("#docStatus").value, source:old?.source || (file?.name || "手动录入"), body, createdAt:old?.createdAt || new Date().toISOString(), updatedAt:new Date().toISOString() }; await transaction("documents","readwrite",store=>store.put(doc)); await loadDocs(); closeModal(); recordAudit(id ? "edit_document" : "import_document", { target: doc.title, detail: `${doc.category} · ${audienceNames[doc.audience] || "所有员工"} · ${(doc.body || "").length} 字` }); showToast(id ? "文档修改已保存" : "文档已加入本地知识库"); }
+  async function openDocument(doc) {
+    // 服务端模式：先向服务端要这份文档。越权会返回 403，且这次拒绝由服务端权威记入审计，
+    // 客户端拿不到任何内容（文档在出网前就已按身份过滤）。
+    if (serverReady()) {
+      try { const data = await serverFetch(`/api/documents/${encodeURIComponent(doc.id)}`); if (data?.document) doc = data.document; }
+      catch (error) { showToast(error.message); return; }
+    }
+    const decision=authorize(doc,"查看");if(!decision.allowed){recordAudit("open_document",{target:doc.title,detail:`越权拒绝 · 该文档可见范围：${audienceNames[doc.audience] || "所有员工"}`,result:"denied"});showToast("当前演示身份无权查看这份文档");return;}recordAudit("open_document",{target:doc.title,detail:`${doc.category} · ${audienceNames[doc.audience] || "所有员工"}`});state.viewerDoc=doc;$("#viewerTitle").textContent=doc.title; $("#viewerMeta").textContent=`${doc.category} · ${audienceNames[doc.audience] || "所有员工"} · ${doc.source || "本地知识库"} · 更新于 ${formatDate(doc.updatedAt)}`; $("#viewerBody").innerHTML=renderMarkdownBody(doc.body || ""); $("#viewerBackdrop").classList.add("open"); $("#viewerClose").focus(); }
+  function closeDocument() { $("#viewerBackdrop").classList.remove("open"); }
+  function openAnswerZoom(index) { const item=state.answerZoomItems[index];if(!item)return;$("#answerZoomTitle").textContent=item.title||"答案放大阅读";$("#answerZoomMeta").textContent=item.meta||`来源：${item.source||"已收录资料"} · 可滚动查看完整答案`;const body=$("#answerZoomBody");body.classList.toggle("zoom-html",!!item.html);if(item.html)body.innerHTML=item.html;else body.textContent=item.text||"";state.zoomCopy=String(item.text||body.innerText||"").trim();$("#answerZoomBackdrop").classList.add("open");$("#answerZoomClose").focus(); }
+  // 生成式回答的放大视图：上方是模型生成的回答，下方逐条附上来源原文，便于核对“和文档里是否一致”
+  function zoomItemForGeneration(query,text,best){
+    const originals=best.map((r,i)=>`<div class="zoom-block"><div class="zoom-block-title">原文 [${i+1}] ${esc(r.doc.title)}${r.sectionTitle?` · ${esc(r.sectionTitle)}`:r.label?` · ${esc(r.label)}`:""}</div><div class="zoom-block-body">${esc(bodyOfResult(r))}</div></div>`).join("");
+    return {title:`生成式回答 · ${query}`,meta:`模型生成内容与 ${best.length} 条来源原文对照 · 原文为逐字摘录，可直接核对`,html:`<div class="zoom-block"><div class="zoom-block-title">模型生成的回答</div><div class="zoom-block-body zoom-md">${renderMarkdownBody(text)}</div></div><div class="zoom-divider">来源原文（逐字摘录，未经改写）</div>${originals}`};
+  }
+  function closeAnswerZoom() { $("#answerZoomBackdrop").classList.remove("open"); }
+  async function docAction(event) {
+    const btn=event.target.closest("[data-action]");if(!btn)return;
+    if(btn.dataset.action==="zoom-answer"){openAnswerZoom(Number(btn.dataset.answerIndex));return;}
+    if(btn.dataset.action==="show-source"){const last=state.lastResults;if(last){renderEvidenceAnswer(last.query,last.results,last.target);$("#resultStatus").textContent=`已切换为原文证据 · ${last.results.length} 条`;}return;}
+    if(btn.dataset.action==="copy-answer"){copyAnswerPayload();return;}
+    if(btn.dataset.action==="reset-answer"){resetAnswerPane();return;}
+    const doc=state.docs.find(d=>d.id===btn.dataset.id);if(!doc)return;
+    const action=btn.dataset.action;
+    if(action==="edit")openModal(doc);
+    if(action==="toggle"){
+      if(serverReady()){
+        try{await serverFetch("/api/documents",{method:"PATCH",body:JSON.stringify({id:doc.id})});await refreshServerDocs();showToast("文档状态已更新（服务端）");}
+        catch(error){showToast(error.message);}
+        return;
+      }
+      doc.status=doc.status==="active"?"inactive":"active";doc.updatedAt=new Date().toISOString();
+      await transaction("documents","readwrite",store=>store.put(doc));await loadDocs();
+      recordAudit("toggle_document",{target:doc.title,detail:doc.status==="active"?"已启用":"已停用"});
+      showToast(doc.status==="active"?"文档已启用":"文档已停用");
+    }
+    if(action==="delete"){
+      if(!confirm(`确定移除“${doc.title}”吗？此操作不会影响原始文件。`))return;
+      if(serverReady()){
+        try{await serverFetch(`/api/documents/${encodeURIComponent(doc.id)}`,{method:"DELETE"});await refreshServerDocs();showToast("文档已从服务端知识库移除");}
+        catch(error){showToast(error.message);}
+        return;
+      }
+      await transaction("documents","readwrite",store=>store.delete(doc.id));await loadDocs();
+      recordAudit("delete_document",{target:doc.title,detail:"已从本地知识库移除"});
+      showToast("文档已从本地知识库移除");
+    }
+    if(action==="source")openDocument(doc);
+  }
+  async function exportData() { const payload={format:"zhigui-local-backup-v1",exportedAt:new Date().toISOString(),documents:state.docs}; const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url;a.download=`zhigui-knowledge-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(url);recordAudit("export_backup",{detail:`导出 ${state.docs.length} 份文档全文`});showToast("备份已导出；请妥善保管全文文件"); }
+  async function saveFeedback(value) { await transaction("feedback","readwrite",store=>store.add({query:state.lastQuery,value,role:state.role,createdAt:new Date().toISOString()})); showToast(value==="yes"?"感谢反馈":"已记录改进反馈（保存在本机）"); }
+  function attachEvents() { $$(".nav button").forEach(b=>b.addEventListener("click",()=>setPage(b.dataset.page))); $("#goDocs").addEventListener("click",()=>setPage("docs")); $("#quickImport").addEventListener("click",()=>openModal()); $("#addDoc").addEventListener("click",()=>openModal()); $("#manageImport").addEventListener("click",()=>openModal()); $("#manageViewDocs").addEventListener("click",()=>setPage("docs")); $("#askButton").addEventListener("click",answerQuery); $("#questionInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();answerQuery();}}); $("#questionInput").addEventListener("input",syncAskControls); $("#questionClear").addEventListener("click",()=>{$("#questionInput").value="";syncAskControls();$("#questionInput").focus();}); $("#historyRow").addEventListener("click",e=>{const chip=e.target.closest("[data-history]");if(chip){$("#questionInput").value=chip.dataset.history;syncAskControls();answerQuery();return;}if(e.target.closest("#historyClear"))clearAskHistory();}); $("#onboardClose").addEventListener("click",dismissOnboard); $$(".chip").forEach(b=>b.addEventListener("click",()=>{$("#questionInput").value=b.dataset.query;answerQuery();})); $("#docSearch").addEventListener("input",renderDocs); $("#categoryFilter").addEventListener("change",renderDocs); $("#statusFilter").addEventListener("change",renderDocs); $("#docGrid").addEventListener("click",docAction); $("#answerPane").addEventListener("click",e=>{const feedback=e.target.closest("[data-feedback]");if(feedback){saveFeedback(feedback.dataset.feedback);return;}const retry=e.target.closest("[data-query]");if(retry){$("#questionInput").value=retry.dataset.query;syncAskControls();answerQuery();return;}docAction(e);}); $("#viewerClose").addEventListener("click",closeDocument); $("#viewerDone").addEventListener("click",closeDocument); $("#viewerCopy").addEventListener("click",()=>{if(state.viewerDoc)copyText(state.viewerDoc.body||"",`《${state.viewerDoc.title}》全文`);}); $("#viewerBackdrop").addEventListener("click",e=>{if(e.target.id==="viewerBackdrop")closeDocument();}); $("#answerZoomClose").addEventListener("click",closeAnswerZoom); $("#answerZoomDone").addEventListener("click",closeAnswerZoom); $("#answerZoomCopy").addEventListener("click",()=>copyText(state.zoomCopy,"放大内容")); $("#answerZoomBackdrop").addEventListener("click",e=>{if(e.target.id==="answerZoomBackdrop")closeAnswerZoom();}); document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeAnswerZoom();closeDocument();closeModal();return;}const tag=String(e.target?.tagName||"").toLowerCase();if(e.key==="/"&&!["input","textarea","select"].includes(tag)&&!e.target?.isContentEditable){e.preventDefault();setPage("ask");$("#questionInput").focus();}}); $("#docForm").addEventListener("submit",saveDocument); $("#closeModal").addEventListener("click",closeModal); $("#cancelModal").addEventListener("click",closeModal); $("#modalBackdrop").addEventListener("click",e=>{if(e.target.id==="modalBackdrop")closeModal();}); $("#fileInput").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{const data=await extractTextFromFile(f);if(!$("#docTitle").value)$("#docTitle").value=data.title;if(!$("#docBody").value)$("#docBody").value=data.body;showToast(`已读取 ${f.name}，保存后写入本地知识库`);}catch(err){showToast(err.message);e.target.value="";}}); $("#roleSelect").addEventListener("change",e=>{state.role=e.target.value;$("#avatar").textContent=roleNames[state.role][0];recordAudit("role_switch",{detail:`切换演示身份为「${roleNames[state.role]}」`});renderAll();if(state.lastQuery)answerQuery();}); $("#exportData").addEventListener("click",exportData); $("#llmSave").addEventListener("click",()=>{const baseUrl=$("#llmBaseUrl").value.trim();const model=$("#llmModel").value.trim();const apiKey=$("#llmApiKey").value.trim();if(!baseUrl||!model){showToast("接口地址与模型名称不能为空");return;}if(!/^https?:\/\//i.test(baseUrl)){showToast("接口地址需以 http:// 或 https:// 开头");return;}saveLlmConfig({enabled:true,baseUrl,model,apiKey,rerank:$("#llmRerank").checked});recordAudit("llm_config",{target:model,detail:`启用生成式回答 · 接口 ${baseUrl}${apiKey?" · 已带密钥":""}${$("#llmRerank").checked?" · 已开启检索重排":""}`});showToast("已启用生成式回答（配置仅保存在本机）");}); $("#llmTest").addEventListener("click",testLlmConnection); $("#llmFetchModels").addEventListener("click",fetchModelList); $("#llmModelList").addEventListener("click",e=>{const item=e.target.closest('[data-action="pick-model"]');if(item)pickModel(item.dataset.model);}); $("#llmClear").addEventListener("click",()=>{saveLlmConfig({...DEFAULT_LLM_CONFIG});recordAudit("llm_config",{detail:"清除模型配置，回到证据摘录模式"});showToast("已清除模型配置，回到证据摘录模式");}); $("#auditExport").addEventListener("click",exportAudit); $("#auditClear").addEventListener("click",clearAudit); $("#auditServer").addEventListener("click",showServerAudit); ["auditResultFilter","auditRoleFilter","auditActionFilter"].forEach(id=>{const el=$("#"+id);if(el)el.addEventListener("change",()=>{state.auditFilter={result:$("#auditResultFilter").value,role:$("#auditRoleFilter").value,action:$("#auditActionFilter").value};renderAudit();});}); $("#serverConnect").addEventListener("click",connectServer); $("#serverDisconnect").addEventListener("click",disconnectServer); $("#serverPass").addEventListener("keydown",e=>{if(e.key==="Enter")connectServer();}); }
+  async function init() { attachEvents(); renderModePill(); renderLlmPanel(); renderServerPanel(); renderPermissionTable(); renderAskHistory(); renderOnboard(); syncAskControls(); try { state.db=await openDB(); if(serverReady()){ try{ await refreshServerDocs(); }catch(error){ state.server=null; saveServerSession(null); renderServerPanel(); showToast(`服务端会话已失效，已回到本地模式：${error.message}`); } } if(!serverReady()){ await seedIfEmpty(); await loadDocs(); } await loadAudit(); } catch (error) { console.error("本地知识库初始化失败",error); showToast("浏览器本地存储不可用，请在正常浏览器页面中打开"); } }
+  init();
+})();
+</script>
+</body>
+</html>
