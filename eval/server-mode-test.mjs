@@ -148,6 +148,31 @@ try {
   check('审计接口返回来源统计 { server, client }', typeof auditSources?.server === 'number' && typeof auditSources?.client === 'number', JSON.stringify(auditSources));
   check('来源统计里确有 client 记录', auditSources?.client >= 1, JSON.stringify(auditSources));
 
+  // 白名单不变量：服务端白名单必须覆盖「前端会主动上报的全部动作」。
+  // 前端 recordAudit() 跳过 SERVER_AUTHORITATIVE，其余一律上报；少放行一个动作，
+  // 它就会被 400 拒掉并记成 client_event_rejected —— 等于审计静默降级。这条用例专门防漂移。
+  const htmlSrc = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  const serverSrc = fs.readFileSync(path.join(ROOT, 'server', 'server.mjs'), 'utf8');
+  const labelsBlock = (htmlSrc.match(/const AUDIT_LABELS = \{([\s\S]*?)\};/) || [])[1] || '';
+  const frontendActions = new Set([...labelsBlock.matchAll(/([a-z_]+)\s*:/g)].map((match) => match[1]));
+  const authBlock = (htmlSrc.match(/SERVER_AUTHORITATIVE = new Set\(\[([^\]]*)\]\)/) || [])[1] || '';
+  const authoritative = new Set([...authBlock.matchAll(/"([a-z_]+)"/g)].map((match) => match[1]));
+  const wlBlock = (serverSrc.match(/CLIENT_REPORTABLE_ACTIONS = new Set\(\[([\s\S]*?)\]\)/) || [])[1] || '';
+  const whitelist = new Set([...wlBlock.matchAll(/'([a-z_]+)'/g)].map((match) => match[1]));
+  check('前端动作表可解析（AUDIT_LABELS 非空）', frontendActions.size > 0, `${frontendActions.size} 个`);
+  check('服务端白名单可解析（非空）', whitelist.size > 0, `${whitelist.size} 个`);
+  const reported = [...frontendActions].filter((action) => !authoritative.has(action));
+  const notAllowed = reported.filter((action) => !whitelist.has(action));
+  check('白名单覆盖前端全部上报动作（防漂移）', notAllowed.length === 0, notAllowed.length ? `缺放行：${notAllowed.join(' / ')}` : `覆盖 ${reported.length} 个`);
+  const overlapped = [...whitelist].filter((action) => authoritative.has(action));
+  check('白名单不含「服务端权威记录」的动作', overlapped.length === 0, overlapped.length ? `不应放行：${overlapped.join(' / ')}` : '无重叠');
+
+  // 端到端回归：曾因白名单漏放行而被 400 拒掉的三个动作，现在应被接受
+  for (const action of ['export_backup', 'audit_export', 'audit_clear']) {
+    const res = await api('/api/events', { method: 'POST', token: adminToken, body: { action, detail: `白名单回归：${action}` } });
+    check(`曾漏放行的动作 ${action} 现被接受（202）`, res.status === 202, `status=${res.status}`);
+  }
+
   // 限速：同一用户 1 分钟内第 61 条起返回 429（用 hr 账号，避免影响后续 employee / admin 用例）
   let limited = false;
   for (let i = 0; i < 62; i += 1) {

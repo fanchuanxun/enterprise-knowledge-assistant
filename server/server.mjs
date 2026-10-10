@@ -125,7 +125,15 @@ const CLIENT_REPORTABLE_ACTIONS = new Set([
   'llm_config',     // 模型配置存前端 localStorage
   'llm_models',     // 前端直连模型服务拉取列表
   'role_switch',    // 纯本地模式的演示身份切换
+  'export_backup',  // 导出本机知识库备份，服务端不感知
+  'audit_export',   // 导出本机审计日志，服务端不感知
+  'audit_clear',    // 清空本机审计日志：只影响前端 IndexedDB，动不了服务端 append-only 日志
 ]);
+// ⚠️ 这份白名单必须覆盖「前端会主动上报的全部动作」。
+// 前端 index.html 里 `recordAudit()` 会跳过 SERVER_AUTHORITATIVE（由服务端权威记录的那批），
+// 其余动作一律上报；因此本集合必须 ⊇ (AUDIT_LABELS \ SERVER_AUTHORITATIVE)。
+// 少放行一个动作，它就会被 400 拒掉并记成 client_event_rejected，等于审计静默降级。
+// 这个不变量由 eval/server-mode-test.mjs 的白名单一致性用例守护。
 
 // 事件写入限速：同一用户 1 分钟内最多 60 条。
 // 在没有日志轮转机制之前，这是防止审计文件被高频上报灌爆的兜底。
