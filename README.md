@@ -18,7 +18,7 @@
 方式二，起一个本地静态服务（推荐，IndexedDB 在 http 源下行为更稳定）：
 
 ```bash
-cd "D:/不知道是啥/企业内部知识问答与制度助手"
+cd enterprise-knowledge-assistant   # 换成你 clone 后的目录
 python -m http.server 8765 --bind 127.0.0.1
 # 浏览器打开 http://127.0.0.1:8765
 ```

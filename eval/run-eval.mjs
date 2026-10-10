@@ -131,7 +131,7 @@ const overall = {
 
 const report = {
   generatedAt: new Date().toISOString(),
-  target: 'D:/不知道是啥/企业内部知识问答与制度助手/index.html',
+  target: 'index.html',
   corpus: spec.corpus,
   overall,
   summary,
