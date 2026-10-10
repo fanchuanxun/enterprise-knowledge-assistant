@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   test:
-    name: 全部测试（10 套 / 350 断言）
+    name: 全部测试（10 套 / 356 断言）
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
