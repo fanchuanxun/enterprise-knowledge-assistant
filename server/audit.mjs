@@ -4,9 +4,16 @@
  * 设计目标：把「审计可被本机清空 / 篡改」这条局限真正解决掉。
  *   - 只追加，不提供任何修改或删除接口
  *   - 每条记录写入 prevHash 与 hash，形成链：
- *       hash = sha256(`${prevHash}|${seq}|${at}|${user}|${role}|${action}|${target}|${detail}|${result}`)
+ *       hash = sha256(`${prevHash}|${seq}|${at}|${user}|${role}|${action}|${target}|${detail}|${result}|${source}`)
  *     首条记录的 prevHash 为 "GENESIS"
  *   - verifyChain() 逐条重算，任何一行被改动 / 删除 / 换序都会暴露出来
+ *
+ * `source` 区分两类记录，这是取证可信度的关键：
+ *   - "server"：由服务端在处理请求时权威记录（越权拒绝、登录、文档增删改、审计读取…）
+ *   - "client"：由前端通过 POST /api/events 上报的「服务端无法感知的纯前端行为」
+ *     （检索在浏览器执行、前置安全闸、复制内容、模型配置变更…）
+ * 两者的 user / role / ip / at 都由服务端补全，但 action / target / detail 在 client
+ * 记录里属于**客户端声明**，未经服务端验证 —— 取证时必须按 source 区分对待。
  *
  * 注意：哈希链只能**发现**篡改，不能**阻止**有文件写权限的人重算整条链。
  * 真实生产应把日志实时推送到独立的只写存储（对象存储 WORM、日志服务、SIEM），
@@ -19,7 +26,7 @@ import crypto from 'node:crypto';
 export const GENESIS = 'GENESIS';
 
 export function canonicalLine(entry) {
-  return [entry.prevHash, entry.seq, entry.at, entry.user, entry.role, entry.action, entry.target, entry.detail, entry.result].join('|');
+  return [entry.prevHash, entry.seq, entry.at, entry.user, entry.role, entry.action, entry.target, entry.detail, entry.result, entry.source || 'server'].join('|');
 }
 
 export function hashEntry(entry) {
@@ -43,8 +50,13 @@ export class AuditLog {
 
   get size() { return this.entries.length; }
 
-  /** 追加一条记录，返回落盘后的完整条目。字段中的 user / role / ip 由服务端补全，不接受客户端指定。 */
-  append({ action, target = '', detail = '', result = 'allowed', user = '', role = '', ip = '' }) {
+  /**
+   * 追加一条记录，返回落盘后的完整条目。
+   *
+   * user / role / ip / at 一律由服务端补全，不接受客户端指定。
+   * source 标记记录来源：'server'（服务端权威记录）或 'client'（前端上报的声明）。
+   */
+  append({ action, target = '', detail = '', result = 'allowed', user = '', role = '', ip = '', source = 'server' }) {
     const previous = this.entries[this.entries.length - 1];
     const entry = {
       seq: this.entries.length + 1,
@@ -56,12 +68,25 @@ export class AuditLog {
       detail,
       result,
       ip,
+      source: source === 'client' ? 'client' : 'server',
       prevHash: previous?.hash || GENESIS,
     };
     entry.hash = hashEntry(entry);
     this.entries.push(entry);
     fs.appendFileSync(this.file, `${JSON.stringify(entry)}\n`, 'utf8');
     return entry;
+  }
+
+  /** 按来源统计条数，便于在审计页 / 健康检查里区分权威记录与客户端声明。 */
+  countBySource() {
+    let server = 0;
+    let client = 0;
+    for (const entry of this.entries) {
+      if (entry.__broken) continue;
+      if (entry.source === 'client') client += 1;
+      else server += 1;
+    }
+    return { server, client };
   }
 
   /** 最近 N 条（倒序）。 */

@@ -113,6 +113,40 @@ function noteLoginFailure(ip) {
   else record.failures += 1;
 }
 
+// ── 客户端事件上报的白名单 ──────────────────────────────────────────────────
+// 只接受「服务端无法感知的纯前端行为」。像 open_document / import_document /
+// toggle_document / delete_document / export_backup 这类**服务端自己会权威记录**的事件，
+// 一律不接受客户端上报 —— 否则同一件事会出现两条来源不同、可信度不同的记录，
+// 取证时无法区分「服务端确认发生」与「客户端声称发生」。
+const CLIENT_REPORTABLE_ACTIONS = new Set([
+  'query',          // 检索在浏览器本地执行，服务端感知不到
+  'query_blocked',  // 前置安全闸在前端
+  'copy_text',      // 纯前端行为
+  'llm_config',     // 模型配置存前端 localStorage
+  'llm_models',     // 前端直连模型服务拉取列表
+  'role_switch',    // 纯本地模式的演示身份切换
+]);
+
+// 事件写入限速：同一用户 1 分钟内最多 60 条。
+// 在没有日志轮转机制之前，这是防止审计文件被高频上报灌爆的兜底。
+const eventRate = new Map();
+const EVENT_WINDOW_MS = 60 * 1000;
+const EVENT_MAX_PER_WINDOW = 60;
+function eventRateLimited(user) {
+  const now = Date.now();
+  const record = eventRate.get(user);
+  if (!record || record.resetAt < now) {
+    // 顺手清理已过期条目，避免 Map 随用户数无限增长
+    if (eventRate.size > 500) {
+      for (const [key, value] of eventRate) if (value.resetAt < now) eventRate.delete(key);
+    }
+    eventRate.set(user, { count: 1, resetAt: now + EVENT_WINDOW_MS });
+    return false;
+  }
+  record.count += 1;
+  return record.count > EVENT_MAX_PER_WINDOW;
+}
+
 // ── 路由 ────────────────────────────────────────────────────────────────────
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host || '127.0.0.1'}`);
@@ -135,7 +169,14 @@ const server = http.createServer(async (req, res) => {
   if (!url.pathname.startsWith('/api/')) { send(res, 404, { error: '未找到该资源' }); return; }
 
   if (req.method === 'GET' && url.pathname === '/api/health') {
-    send(res, 200, { ok: true, documents: documents.length, users: users.size, auditEntries: audit.size, policy: Object.keys(ACCESS_POLICY) });
+    send(res, 200, {
+      ok: true,
+      documents: documents.length,
+      users: users.size,
+      auditEntries: audit.size,
+      auditSources: audit.countBySource(),
+      policy: Object.keys(ACCESS_POLICY),
+    });
     return;
   }
 
@@ -272,20 +313,47 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // ── 业务事件上报（服务端补全时间 / 身份 / IP 等权威字段）──────────────────
+  // ── 业务事件上报（仅接受白名单内的纯前端事件）─────────────────────────────
+  // 时间 / 身份 / IP 由服务端补全；action / target / detail 属于**客户端声明**，
+  // 因此落盘时标记 source=client，与 source=server 的权威记录在存储层就可区分。
   if (route === 'POST /api/events') {
     const body = await readJson(req);
     if (body.__error) { send(res, 400, { error: body.__error }); return; }
+    const action = String(body.action || '');
+    if (!CLIENT_REPORTABLE_ACTIONS.has(action)) {
+      // 拒绝本身也由服务端权威留痕，并带上被拒的 action 以便排查
+      audit.append({
+        action: 'client_event_rejected',
+        target: action.slice(0, 60) || '(空)',
+        detail: `客户端上报了不在白名单内的事件类型；仅接受：${[...CLIENT_REPORTABLE_ACTIONS].join(' / ')}`,
+        result: 'denied',
+        user: identity.username, role: identity.role, ip,
+      });
+      send(res, 400, { error: `事件类型「${action || '(空)'}」不允许由客户端上报` });
+      return;
+    }
+    if (eventRateLimited(identity.username)) {
+      audit.append({
+        action: 'client_event_rejected',
+        target: action,
+        detail: `上报频率超限（同一用户 ${EVENT_WINDOW_MS / 60000} 分钟内超过 ${EVENT_MAX_PER_WINDOW} 条）`,
+        result: 'denied',
+        user: identity.username, role: identity.role, ip,
+      });
+      send(res, 429, { error: '事件上报过于频繁，请稍后再试' });
+      return;
+    }
     const entry = audit.append({
-      action: String(body.action || 'unknown'),
-      target: String(body.target || ''),
-      detail: String(body.detail || ''),
+      action,
+      target: String(body.target || '').slice(0, 200),
+      detail: String(body.detail || '').slice(0, 500),
       result: body.result === 'denied' ? 'denied' : 'allowed',
       user: identity.username,
       role: identity.role,
       ip,
+      source: 'client',
     });
-    send(res, 202, { ok: true, seq: entry.seq });
+    send(res, 202, { ok: true, seq: entry.seq, source: 'client' });
     return;
   }
 
@@ -297,7 +365,12 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     const limit = Math.min(Math.max(Number(url.searchParams.get('limit') || 100), 1), 500);
-    send(res, 200, { integrity: audit.verifyChain(), total: audit.size, entries: audit.tail(limit) });
+    send(res, 200, {
+      integrity: audit.verifyChain(),
+      total: audit.size,
+      sources: audit.countBySource(),
+      entries: audit.tail(limit),
+    });
     return;
   }
 

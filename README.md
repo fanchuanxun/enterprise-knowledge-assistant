@@ -69,7 +69,7 @@ index.html（单文件）
 │             ├── 模型列表  GET {baseUrl}/models → normalizeModelList → 展示 + 点击选用
 │             └── 检索重排  候选编号 → 模型排序 → 解析顺序 → 失败静默回退
 ├── 审计层    recordAudit(action, {target, detail, result}) → 内存 + IndexedDB
-│             服务端模式下同时上报 /api/events（授权相关动作由服务端自行记录）
+│             服务端模式下上报 /api/events（仅白名单纯前端事件，标记 source=client；授权相关动作由服务端自行记录）
 └── 展示层    Markdown 清洗 → 层级渲染 → 证据卡片 + 来源 + 放大阅读
 ```
 
@@ -79,7 +79,7 @@ index.html（单文件）
 server/server.mjs      路由 / 静态托管（只托管 index.html）/ 限速
        ├── policy.mjs  ACCESS_POLICY 权威版本 → 出网前过滤 + 403
        ├── auth.mjs    scrypt 口令哈希 + HMAC token 签发验签
-       ├── audit.mjs   append-only JSONL + 哈希链校验
+       ├── audit.mjs   append-only JSONL + 哈希链校验 + source 可信度分层
        └── seed.mjs    演示账号
 ```
 
@@ -173,6 +173,8 @@ node server/server.mjs          # http://127.0.0.1:8787
 
 评测脚本在真实页面链路上逐条提问（Playwright 驱动 Chrome），判定命中 / 拒答 / 权限隔离是否正确。
 
+判定口径收在纯函数 [`eval/judge.mjs`](eval/judge.mjs) 里，**关键约束是「要点必须落在同一条证据内」**：期望关键词不能分散在不同证据块里拼出来，否则算不通过。这条约束专门堵「关键词凑巧同时出现就判通过」的假通过风险，并由 [`eval/judge-test.mjs`](eval/judge-test.mjs) 的 19 项单元测试钉死（其中 `R01` 就是「要点分散在不同小节应判不通过」的回归用例）。报告头部会打印当前判定口径，避免口径与数字脱节。
+
 **跑测试前先装依赖**（应用本体零依赖，只有测试需要）：
 
 ```bash
@@ -185,21 +187,22 @@ npm install          # 只装 devDependency: playwright-core
 CHROME_PATH="/path/to/chrome" npm test
 ```
 
-> 这两件与机器相关的事（playwright-core 在哪、Chrome 在哪）统一收敛在 [`eval/browser-harness.mjs`](eval/browser-harness.mjs)，9 个测试脚本共用，不再各写一份硬编码路径。
+> 这两件与机器相关的事（playwright-core 在哪、Chrome 在哪）统一收敛在 [`eval/browser-harness.mjs`](eval/browser-harness.mjs)，10 个测试脚本共用，不再各写一份硬编码路径。
 
 ```bash
 node eval/run-eval.mjs                 # 检索质量评测，写 eval/report/latest.json + latest.md
 node eval/run-eval.mjs --label baseline # 另存一份，用于改动前后对比
+node eval/judge-test.mjs               # 判定逻辑单元测试（同条证据约束 / 拒答 / 小节越界，19 项断言）
 node eval/llm-layer-test.mjs           # 生成层测试（内置 mock 模型服务，11 项断言）
 node eval/permission-audit-test.mjs    # 权限与审计测试（10 项断言）
 node eval/parse-test.mjs               # DOCX / PDF 解析测试（内置 ZIP 与 PDF 生成器，12 项断言）
 node eval/model-rerank-test.mjs        # 模型列表与检索重排测试（内置 mock /models 与 /chat，24 项断言）
 node eval/answer-zoom-list-test.mjs    # 回答展示测试（列表不换行 + 生成式回答可放大，22 项断言）
 node eval/doc-manage-test.mjs          # 文档管理 / 权限演示 / 响应式测试（35 项断言）
-node eval/server-mode-test.mjs         # 服务端模式测试（真实子进程 + HTTP，54 项断言）
+node eval/server-mode-test.mjs         # 服务端模式测试（真实子进程 + HTTP，63 项断言）
 node eval/ux-polish-test.mjs           # 使用者体验测试（引导 / 历史 / 复制 / 筛选 / 无障碍，29 项断言）
 
-npm test                               # 以上九套串行跑一遍
+npm test                               # 以上十套串行跑一遍
 ```
 
 **语料**：内置 5 份演示制度 + `eval/corpus/` 下 4 份带编号小节的演示文档（员工手册 / 财务报销制度 / 培训与职业发展管理办法 / 会议室与办公环境管理办法，共 12 章 36 个编号小节与 12 条追问）
@@ -316,7 +319,7 @@ node eval/doc-manage-test.mjs
 node eval/server-mode-test.mjs
 ```
 
-测试会**真实拉起一个服务端子进程**（随机端口 + 临时数据目录，跑完自动清理），54 项断言分六组：
+测试会**真实拉起一个服务端子进程**（随机端口 + 临时数据目录，跑完自动清理），63 项断言分七组：
 
 | 组 | 覆盖 |
 | --- | --- |
@@ -324,10 +327,11 @@ node eval/server-mode-test.mjs
 | 服务端权限 | 四个角色各自可见份数、越权文档不出网（响应里不含其任何字段）、按 id 请求越权 403 且不含正文、有权文档 200 |
 | 写入 RBAC | 非管理员新增 / 启停 / 移除全部 403，管理员成功，新增的 `all` 文档对员工立即可见 |
 | 审计 | 非管理员读 403、管理员读 200、哈希链完整、越权记为 denied、带 `user`/`role`/`ip` 权威字段、**直接改写 `audit.jsonl` 被检出并定位到第 2 行**、还原后恢复完整、客户端无法伪造 `user` |
+| 上报约束 | 白名单事件被接受（202）并标记 `source=client`；非白名单事件 400 且由服务端权威留痕 `client_event_rejected` / `denied`；权威记录带 `source=server`；`/api/audit` 返回来源统计；**同一用户 1 分钟内第 61 条上报被限速 429** |
 | 静态隔离 | `/data/audit.jsonl`、`/data/secret.key`、`/server/server.mjs` 均 404 |
 | 前端集成 | 默认仍是纯本地、登录后进入服务端模式、身份下拉锁定、文档集来自服务端且无受限卡片、检索正常作答、非管理员读服务端审计被拒、断开后回到本地 5 份文档、管理员可看服务端审计且含哈希链完整性 |
 
-**当前 54/54 通过，浏览器错误 0。**
+**当前 63/63 通过，浏览器错误 0。**
 
 ### 使用者体验测试
 
@@ -350,12 +354,12 @@ node eval/ux-polish-test.mjs
 ├── LICENSE                    MIT
 ├── .gitignore                 data/（服务端运行期产物）
 ├── .gitattributes             统一换行符，避免跨平台整文件 diff
-├── package.json               serve · serve:server · eval · eval:baseline · test:llm · test:permission · test:parse · test:model · test:answer · test:doc · test:server · test:ux · test
+├── package.json               serve · serve:server · eval · eval:baseline · test:judge · test:llm · test:permission · test:parse · test:model · test:answer · test:doc · test:server · test:ux · test
 ├── server/                    零依赖 Node 服务端参考实现
 │   ├── server.mjs             路由 / 静态托管 / 登录限速
 │   ├── policy.mjs             ACCESS_POLICY 权威版本
 │   ├── auth.mjs               scrypt 口令哈希 + HMAC token
-│   ├── audit.mjs              append-only JSONL + 哈希链
+│   ├── audit.mjs              append-only JSONL + 哈希链 + source 分层
 │   ├── seed.mjs               演示账号
 │   └── seed-documents.json    种子文档
 ├── data/                      服务端运行期生成（已 gitignore）：documents / users / audit.jsonl / secret.key
@@ -371,6 +375,8 @@ node eval/ux-polish-test.mjs
     ├── browser-harness.mjs    共享夹具：定位 playwright-core 与 Chrome（逐个候选回退启动）
     ├── cases.json             118 条评测用例与 ground truth
     ├── run-eval.mjs           检索评测执行器（自带静态服务 + Playwright 驱动）
+    ├── judge.mjs              判定纯函数（同条证据约束 / 拒答 / 小节越界）
+    ├── judge-test.mjs         判定逻辑单元测试（19 项断言，无需浏览器）
     ├── llm-layer-test.mjs     生成层测试（自带 mock 模型服务）
     ├── permission-audit-test.mjs  权限与审计测试
     ├── parse-test.mjs         DOCX / PDF 解析测试（自带 ZIP 与 PDF 生成器）

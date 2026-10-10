@@ -14,6 +14,7 @@ import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { launchBrowser } from './browser-harness.mjs';
+import { judge } from './judge.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..');
@@ -36,21 +37,7 @@ function startStaticServer() {
   return new Promise(resolve => server.listen(0, '127.0.0.1', () => resolve({ server, port: server.address().port })));
 }
 
-function judge(testCase, observed) {
-  const { refused, answer } = observed;
-  if (testCase.expectRefusal) return { pass: refused, reason: refused ? '正确拒答' : '应拒答但给出了答案' };
-  if (refused) return { pass: false, reason: '未找到依据，但该问题有预期答案' };
-  const missing = (testCase.expectKeywords || []).filter(keyword => !answer.includes(keyword));
-  if (missing.length) return { pass: false, reason: `缺少要点：${missing.join(' / ')}` };
-  const leaked = (testCase.rejectKeywords || []).filter(keyword => answer.includes(keyword));
-  if (leaked.length) return { pass: false, reason: `混入了不该出现的内容：${leaked.join(' / ')}` };
-  if (testCase.expectUnitTitle && !answer.includes(`${testCase.expectUnitTitle} · 完整小节`)) {
-    return { pass: false, reason: `未定位到编号小节「${testCase.expectUnitTitle}」` };
-  }
-  const crossed = (testCase.rejectUnitTitles || []).filter(title => answer.includes(`${title} · 完整小节`));
-  if (crossed.length) return { pass: false, reason: `越界到兄弟小节：${crossed.join(' / ')}` };
-  return { pass: true, reason: '命中预期要点' };
-}
+// 判定逻辑见 ./judge.mjs —— 抽成纯函数后可以脱离浏览器做单元测试（eval/judge-test.mjs）。
 
 const labelArgIndex = process.argv.indexOf('--label');
 const label = labelArgIndex > -1 ? process.argv[labelArgIndex + 1] : '';
@@ -94,8 +81,13 @@ try {
     await page.waitForTimeout(40);
     const status = (await page.locator('#resultStatus').innerText()).trim();
     const answer = await page.locator('#answerPane').innerText();
+    // 逐条取证据块：每个 .answer-part 是一小节的完整原文（含「N.N 标题 · 完整小节」标记）。
+    // 判定用逐条文本而不是整块面板文本，避免「不同小节各命中一个词」被误判为答对。
+    const parts = await page.locator('#answerPane .answer-part').evaluateAll(
+      nodes => nodes.map(node => node.innerText.replace(/\s+/g, ' ').trim()),
+    );
     const refused = status === '未找到足够依据' || answer.includes('暂未找到足够依据');
-    const verdict = judge(testCase, { refused, answer });
+    const verdict = judge(testCase, { refused, answer, parts });
     results.push({
       id: testCase.id,
       group: testCase.group,
@@ -104,7 +96,12 @@ try {
       pass: verdict.pass,
       reason: verdict.reason,
       note: testCase.note || '',
-      observed: refused ? '[拒答]' : answer.replace(/\s+/g, ' ').slice(0, 160),
+      evidenceCount: parts.length,
+      observed: refused
+        ? '[拒答]'
+        : parts.length
+          ? `${parts.length > 1 ? `${parts.length} 条证据 ｜ ` : ''}${parts[0].slice(0, 150)}`
+          : answer.replace(/\s+/g, ' ').slice(0, 160),
     });
     console.log(`${verdict.pass ? 'PASS' : 'FAIL'} ${testCase.id} [${testCase.group}] ${testCase.query}${verdict.pass ? '' : ` — ${verdict.reason}`}`);
   }
@@ -149,6 +146,8 @@ lines.push(`- 生成时间：${report.generatedAt}`);
 lines.push(`- 被测对象：\`index.html\`（本地浏览器原型）`);
 lines.push(`- 语料：${spec.corpus.join('、')} + 内置 5 份演示制度`);
 lines.push(`- 用例总数：**${overall.total}**，通过 **${overall.passed}**，综合通过率 **${overall.rate}%**`);
+lines.push('- 判定口径：期望要点必须落在**同一条证据**内（页面上每个 `.answer-part` 为一条），'
+  + '且命中的那条须为预期编号小节；要点分散在不同小节、或越界到兄弟小节，均判为不通过');
 lines.push('', '## 分组指标', '', '| 分组 | 用例数 | 通过 | 通过率 |', '| --- | ---: | ---: | ---: |');
 for (const [key, value] of Object.entries(summary)) lines.push(`| ${value.label} | ${value.total} | ${value.passed} | ${value.rate}% |`);
 lines.push('', '## 逐条结果', '', '| 用例 | 分组 | 身份 | 问题 | 结果 | 说明 |', '| --- | --- | --- | --- | --- | --- |');

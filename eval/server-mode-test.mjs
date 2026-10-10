@@ -127,6 +127,35 @@ try {
   check('客户端上报的业务事件被写入', audit2.body.total > audit1.body.total, `${audit1.body.total} → ${audit2.body.total}`);
   check('客户端无法伪造 user 字段', (audit2.body.entries || []).find((entry) => entry.action === 'query')?.user === 'admin');
 
+  // ── D2. 上报白名单 / 来源标记 / 限速 ───────────────────────────────────────
+  // 白名单内的纯前端事件：接受，并落盘为 source=client 的「客户端声明」
+  const evtOk = await api('/api/events', { method: 'POST', token: adminToken, body: { action: 'copy_text', detail: '复制了一段制度原文' } });
+  check('白名单事件被接受（202）', evtOk.status === 202, `status=${evtOk.status}`);
+  check('白名单事件回执标记 client 来源', evtOk.body?.source === 'client', JSON.stringify(evtOk.body));
+  const afterOk = await api('/api/audit?limit=200', { token: adminToken });
+  const clientEntry = (afterOk.body?.entries || []).find((entry) => entry.action === 'copy_text');
+  check('client 事件落盘带 source=client 字段', clientEntry?.source === 'client', JSON.stringify(clientEntry?.source));
+  check('权威记录带 source=server 字段', (afterOk.body?.entries || []).find((entry) => entry.action === 'open_document')?.source === 'server');
+
+  // 非白名单事件：拒绝，且由服务端权威留痕为 client_event_rejected / denied / source=server
+  const evtBad = await api('/api/events', { method: 'POST', token: adminToken, body: { action: 'delete_document', detail: '试图伪造删除事件' } });
+  check('非白名单事件被拒绝（400）', evtBad.status === 400, `status=${evtBad.status}`);
+  const rejectedEntry = ((await api('/api/audit?limit=200', { token: adminToken })).body?.entries || []).find((entry) => entry.action === 'client_event_rejected');
+  check('被拒事件由服务端权威留痕（denied / server）', rejectedEntry?.result === 'denied' && rejectedEntry?.source === 'server', JSON.stringify(rejectedEntry && { result: rejectedEntry.result, source: rejectedEntry.source }));
+
+  // 审计接口暴露来源统计，取证时可一眼区分「服务端确认发生」与「客户端声称发生」
+  const auditSources = (await api('/api/audit?limit=200', { token: adminToken })).body?.sources;
+  check('审计接口返回来源统计 { server, client }', typeof auditSources?.server === 'number' && typeof auditSources?.client === 'number', JSON.stringify(auditSources));
+  check('来源统计里确有 client 记录', auditSources?.client >= 1, JSON.stringify(auditSources));
+
+  // 限速：同一用户 1 分钟内第 61 条起返回 429（用 hr 账号，避免影响后续 employee / admin 用例）
+  let limited = false;
+  for (let i = 0; i < 62; i += 1) {
+    const res = await api('/api/events', { method: 'POST', token: hrToken, body: { action: 'query', detail: `限速探针 ${i}` } });
+    if (res.status === 429) { limited = true; break; }
+  }
+  check('同一用户 1 分钟内超过 60 条上报被限速（429）', limited);
+
   // 直接改写磁盘上的 audit.jsonl —— 这是「本机审计可被清空 / 篡改」的反例验证
   const rawLines = fs.readFileSync(AUDIT_FILE, 'utf8').split('\n').filter(Boolean);
   const tampered = JSON.parse(rawLines[1]);

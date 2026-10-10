@@ -11,6 +11,7 @@
     "serve:server": "node server/server.mjs",
     "eval": "node eval/run-eval.mjs",
     "eval:baseline": "node eval/run-eval.mjs --label baseline",
+    "test:judge": "node eval/judge-test.mjs",
     "test:llm": "node eval/llm-layer-test.mjs",
     "test:permission": "node eval/permission-audit-test.mjs",
     "test:parse": "node eval/parse-test.mjs",
@@ -19,7 +20,7 @@
     "test:doc": "node eval/doc-manage-test.mjs",
     "test:server": "node eval/server-mode-test.mjs",
     "test:ux": "node eval/ux-polish-test.mjs",
-    "test": "node eval/run-eval.mjs && node eval/llm-layer-test.mjs && node eval/permission-audit-test.mjs && node eval/parse-test.mjs && node eval/model-rerank-test.mjs && node eval/answer-zoom-list-test.mjs && node eval/doc-manage-test.mjs && node eval/server-mode-test.mjs && node eval/ux-polish-test.mjs"
+    "test": "node eval/run-eval.mjs && node eval/judge-test.mjs && node eval/llm-layer-test.mjs && node eval/permission-audit-test.mjs && node eval/parse-test.mjs && node eval/model-rerank-test.mjs && node eval/answer-zoom-list-test.mjs && node eval/doc-manage-test.mjs && node eval/server-mode-test.mjs && node eval/ux-polish-test.mjs"
   },
   "devDependencies": {
     "playwright-core": "^1.63.0"
