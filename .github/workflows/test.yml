@@ -1,0 +1,68 @@
+name: tests
+
+# 每次推送到 main、每个 PR，以及手动触发时，跑一遍全部测试。
+# 应用本体零依赖；CI 只装 devDependency（playwright-core），
+# 浏览器用 ubuntu-latest 预装的 Google Chrome，不额外下载。
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: 全部测试（10 套 / 350 断言）
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: 安装依赖（仅测试需要 playwright-core）
+        run: npm ci
+
+      # 先跑不需要浏览器的纯函数单测，几秒出结果；挂了就不必再等浏览器套件。
+      - name: 快速门禁 · 判定逻辑单测（无浏览器）
+        run: node eval/judge-test.mjs
+
+      - name: 定位系统 Chrome 并写进环境变量
+        run: |
+          set -euo pipefail
+          for bin in google-chrome google-chrome-stable chromium chromium-browser; do
+            if command -v "$bin" >/dev/null 2>&1; then
+              echo "使用浏览器：$bin → $(command -v "$bin")"
+              "$bin" --version
+              echo "CHROME_PATH=$(command -v "$bin")" >> "$GITHUB_ENV"
+              exit 0
+            fi
+          done
+          echo "::error::未找到系统 Chrome / Chromium"
+          exit 1
+
+      - name: 跑全部测试
+        env:
+          # 容器 / CI 环境的常规启动参数；本机跑测试不需要设。
+          CHROME_ARGS: '--no-sandbox --disable-dev-shm-usage'
+        run: npm test
+
+      - name: 上传评测报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-report
+          path: eval/report/
+          if-no-files-found: warn

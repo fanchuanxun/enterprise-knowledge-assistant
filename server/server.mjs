@@ -18,7 +18,8 @@
  *   ZHIGUI_HOST               监听地址（默认 127.0.0.1，只绑本机）
  *   ZHIGUI_DATA_DIR           数据目录（默认 <项目根>/data）
  *   ZHIGUI_SECRET             token 签名密钥（默认生成并持久化到 <data>/secret.key）
- *   ZHIGUI_CORS_ORIGIN        允许的跨域来源（默认 *，仅适用于本机演示）
+ *   ZHIGUI_CORS_ORIGIN        允许的跨域来源（默认空 = 只允许同源；显式设置后才下发 CORS 头）
+ *   ZHIGUI_TRUST_PROXY=1      信任 X-Forwarded-For / X-Real-IP（仅在反向代理后开启，默认关闭）
  *   ZHIGUI_TOKEN_TTL_MINUTES  token 有效期（默认 120）
  */
 import http from 'node:http';
@@ -38,7 +39,13 @@ const DATA = path.resolve(process.env.ZHIGUI_DATA_DIR || path.join(ROOT, 'data')
 
 const PORT = Number(process.env.ZHIGUI_PORT || process.env.PORT || 8787);
 const HOST = process.env.ZHIGUI_HOST || '127.0.0.1';
-const CORS_ORIGIN = process.env.ZHIGUI_CORS_ORIGIN || '*';
+// 跨域默认关闭（同源）。只有显式设置 ZHIGUI_CORS_ORIGIN 时才下发 CORS 头 ——
+// 原先默认 `*`，等于允许任意站点带着 Authorization 头跨域调用本服务。
+const CORS_ORIGIN = String(process.env.ZHIGUI_CORS_ORIGIN || '').trim();
+// 默认**不信任**代理头：直连时 socket 地址才是真实来源。
+// 只有确实部署在反向代理 / 网关之后，才应设 ZHIGUI_TRUST_PROXY=1 去读 X-Forwarded-For。
+// 否则客户端可以自己伪造 X-Forwarded-For 来绕过登录限速、污染审计里的 IP。
+const TRUST_PROXY = /^(1|true|yes)$/i.test(String(process.env.ZHIGUI_TRUST_PROXY || ''));
 const TOKEN_TTL_MINUTES = Number(process.env.ZHIGUI_TOKEN_TTL_MINUTES || 120);
 
 // ── 数据 ────────────────────────────────────────────────────────────────────
@@ -56,16 +63,51 @@ const documents = JSON.parse(fs.readFileSync(DOCUMENTS_FILE, 'utf8'));
 const saveDocuments = () => fs.writeFileSync(DOCUMENTS_FILE, JSON.stringify(documents, null, 2), 'utf8');
 
 // ── 工具 ────────────────────────────────────────────────────────────────────
-const clientIp = (req) => (req.socket.remoteAddress || '').replace(/^::ffff:/, '');
+const stripV4Mapped = (value) => String(value || '').replace(/^::ffff:/, '').trim();
+const clientIp = (req) => {
+  if (TRUST_PROXY) {
+    // 取**最左侧**地址（最初的客户端）；右侧是逐跳追加的代理地址，不可信。
+    const forwarded = String(req.headers['x-forwarded-for'] || '').split(',')[0];
+    if (stripV4Mapped(forwarded)) return stripV4Mapped(forwarded);
+    if (stripV4Mapped(req.headers['x-real-ip'])) return stripV4Mapped(req.headers['x-real-ip']);
+  }
+  return stripV4Mapped(req.socket.remoteAddress);
+};
+
+// 安全响应头。CSP 的 script-src / style-src 必须保留 'unsafe-inline'：
+// 本应用是单文件设计，样式与脚本都内联在 index.html 里，这是「双击即用」的代价，
+// 已在 docs/服务端说明.md 写明。其余指令仍然挡得住外链脚本、object 嵌入、被 iframe 嵌套与 base 劫持。
+const SECURITY_HEADERS = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'Referrer-Policy': 'no-referrer',
+  'Content-Security-Policy': [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline'",
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob:",
+    'connect-src *', // 生成式回答要直连用户自行配置的模型服务，来源不可预知
+    "object-src 'none'",
+    "base-uri 'none'",
+    "frame-ancestors 'none'",
+    "form-action 'none'",
+  ].join('; '),
+};
 
 function send(res, status, body, extraHeaders = {}) {
   const payload = body === undefined ? '' : JSON.stringify(body);
   res.writeHead(status, {
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store',
-    'Access-Control-Allow-Origin': CORS_ORIGIN,
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
+    ...SECURITY_HEADERS,
+    ...(CORS_ORIGIN
+      ? {
+          'Access-Control-Allow-Origin': CORS_ORIGIN,
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
+          Vary: 'Origin',
+        }
+      : {}),
     ...extraHeaders,
   });
   res.end(payload);
@@ -166,7 +208,7 @@ const server = http.createServer(async (req, res) => {
   // 静态资源：**只托管 index.html**。data/（审计日志、用户库、密钥）与 server/ 一律不暴露。
   if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/index.html')) {
     const html = fs.readFileSync(path.join(ROOT, 'index.html'));
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', ...SECURITY_HEADERS });
     res.end(html);
     return;
   }

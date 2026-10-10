@@ -85,10 +85,14 @@ export function existingChromeCandidates() {
 export async function launchBrowser(options = {}) {
   const chromium = await loadChromium();
   const attempts = [...existingChromeCandidates(), ''];
+  // 容器 / CI 里常需要额外启动参数（如 --no-sandbox、--disable-dev-shm-usage），
+  // 用空格分隔的 CHROME_ARGS 传入即可；本机默认不需要，留空。
+  const extraArgs = String(process.env.CHROME_ARGS || '').split(/\s+/).filter(Boolean);
   let lastError;
   for (const executablePath of attempts) {
     const launchOptions = { headless: true, ...options };
     if (executablePath) launchOptions.executablePath = executablePath;
+    if (extraArgs.length) launchOptions.args = [...(launchOptions.args || []), ...extraArgs];
     try {
       return await chromium.launch(launchOptions);
     } catch (error) {

@@ -1,5 +1,7 @@
 # 企业内部知识问答与制度助手
 
+[![tests](https://github.com/fanchuanxun/enterprise-knowledge-assistant/actions/workflows/test.yml/badge.svg)](https://github.com/fanchuanxun/enterprise-knowledge-assistant/actions/workflows/test.yml)
+
 面向企业内部的制度与流程问答原型：员工用自然语言提问，系统**只在已收录资料中检索证据**并标注来源；资料不足时明确说明，不编造。
 
 - 形态：单文件前端应用（`index.html`），无构建步骤，数据存浏览器 IndexedDB；另附一个**零依赖 Node 服务端参考实现**（`server/`），用于把权限与审计真正搬到服务端
@@ -7,7 +9,7 @@
 - 两种回答模式：**证据摘录**（默认，纯本地、不联网）与**生成式回答**（可选，接入任意 OpenAI 兼容接口，仍只依据检索到的资料作答并强制标注来源）
 - 权限与审计：纯本地模式下由显式策略表 `ACCESS_POLICY` 判定、审计存本机 IndexedDB；**服务端模式下**改为真实登录 + 服务端逐请求校验 + 追加式审计（详见下文与 [`docs/服务端说明.md`](docs/服务端说明.md)）
 - 文档导入：TXT / MD / CSV / JSON / HTML 直接读取；**DOCX / PDF 纯前端零依赖解析**（DOCX 读 ZIP 中央目录取 `word/document.xml`；PDF 解 FlateDecode 流 + ToUnicode CMap 取文本，扫描件会被识别并拒绝）
-- 当前状态：功能闭环已完成；离线评测 **118/118**、判定逻辑单测 19/19、生成层 11/11、权限与审计 10/10、文档解析 12/12、模型列表与重排 24/24、回答展示 22/22、文档管理 35/35、**服务端模式 70/70**、**使用者体验 29/29** 通过（见下文）
+- 当前状态：功能闭环已完成；离线评测 **118/118**、判定逻辑单测 19/19、生成层 11/11、权限与审计 10/10、文档解析 12/12、模型列表与重排 24/24、回答展示 22/22、文档管理 35/35、**服务端模式 76/76**、**使用者体验 29/29** 通过（见下文）；每次推送由 **GitHub Actions 全量复跑**
 
 ---
 
@@ -199,11 +201,13 @@ node eval/parse-test.mjs               # DOCX / PDF 解析测试（内置 ZIP �
 node eval/model-rerank-test.mjs        # 模型列表与检索重排测试（内置 mock /models 与 /chat，24 项断言）
 node eval/answer-zoom-list-test.mjs    # 回答展示测试（列表不换行 + 生成式回答可放大，22 项断言）
 node eval/doc-manage-test.mjs          # 文档管理 / 权限演示 / 响应式测试（35 项断言）
-node eval/server-mode-test.mjs         # 服务端模式测试（真实子进程 + HTTP，70 项断言）
+node eval/server-mode-test.mjs         # 服务端模式测试（真实子进程 + HTTP，76 项断言）
 node eval/ux-polish-test.mjs           # 使用者体验测试（引导 / 历史 / 复制 / 筛选 / 无障碍，29 项断言）
 
 npm test                               # 以上十套串行跑一遍
 ```
+
+**持续集成**：每次推送到 `main` 与每个 PR，[`.github/workflows/test.yml`](.github/workflows/test.yml) 会在 `ubuntu-latest` 上复跑全部测试 —— 先跑不需要浏览器的判定逻辑单测做快速门禁，再跑九套浏览器套件。CI **不下载浏览器**，直接用 runner 预装的 Google Chrome（`CHROME_PATH` 由 workflow 自动定位），因此整个 job 只需要装一个 `playwright-core`。评测报告作为 artifact 上传。
 
 **语料**：内置 5 份演示制度 + `eval/corpus/` 下 4 份带编号小节的演示文档（员工手册 / 财务报销制度 / 培训与职业发展管理办法 / 会议室与办公环境管理办法，共 12 章 36 个编号小节与 12 条追问）
 **用例**：[`eval/cases.json`](eval/cases.json)，**118 条**，分 5 组
@@ -319,7 +323,7 @@ node eval/doc-manage-test.mjs
 node eval/server-mode-test.mjs
 ```
 
-测试会**真实拉起一个服务端子进程**（随机端口 + 临时数据目录，跑完自动清理），70 项断言分七组：
+测试会**真实拉起一个服务端子进程**（随机端口 + 临时数据目录，跑完自动清理），76 项断言分八组：
 
 | 组 | 覆盖 |
 | --- | --- |
@@ -329,9 +333,10 @@ node eval/server-mode-test.mjs
 | 审计 | 非管理员读 403、管理员读 200、哈希链完整、越权记为 denied、带 `user`/`role`/`ip` 权威字段、**直接改写 `audit.jsonl` 被检出并定位到第 2 行**、还原后恢复完整、客户端无法伪造 `user` |
 | 上报约束 | 白名单事件被接受（202）并标记 `source=client`；非白名单事件 400 且由服务端权威留痕 `client_event_rejected` / `denied`；权威记录带 `source=server`；`/api/audit` 返回来源统计；**同一用户 1 分钟内第 61 条上报被限速 429**；**白名单必须覆盖前端全部上报动作（防漂移）**，且不含服务端权威动作 |
 | 静态隔离 | `/data/audit.jsonl`、`/data/secret.key`、`/server/server.mjs` 均 404 |
+| 安全加固 | `nosniff` / `X-Frame-Options: DENY` / CSP（禁 iframe 嵌套与 object）/ API 响应同样带头；**默认不下发 CORS 头**；**伪造 `X-Forwarded-For` 不污染审计 IP** |
 | 前端集成 | 默认仍是纯本地、登录后进入服务端模式、身份下拉锁定、文档集来自服务端且无受限卡片、检索正常作答、非管理员读服务端审计被拒、断开后回到本地 5 份文档、管理员可看服务端审计且含哈希链完整性 |
 
-**当前 70/70 通过，浏览器错误 0。**
+**当前 76/76 通过，浏览器错误 0。**
 
 ### 使用者体验测试
 
@@ -354,6 +359,8 @@ node eval/ux-polish-test.mjs
 ├── LICENSE                    MIT
 ├── .gitignore                 data/（服务端运行期产物）
 ├── .gitattributes             统一换行符，避免跨平台整文件 diff
+├── package-lock.json          锁定 devDependency（playwright-core）版本，供 CI 用 npm ci
+├── .github/workflows/test.yml CI：ubuntu-latest 上复跑全部测试（用 runner 预装 Chrome）
 ├── package.json               serve · serve:server · eval · eval:baseline · test:judge · test:llm · test:permission · test:parse · test:model · test:answer · test:doc · test:server · test:ux · test
 ├── server/                    零依赖 Node 服务端参考实现
 │   ├── server.mjs             路由 / 静态托管 / 登录限速

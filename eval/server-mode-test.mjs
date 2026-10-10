@@ -204,6 +204,25 @@ try {
   check('server/ 目录不对外暴露', (await fetch(`${BASE}/server/server.mjs`)).status === 404);
   check('密钥文件不对外暴露', (await fetch(`${BASE}/data/secret.key`)).status === 404);
 
+  // ── E2. 安全加固：安全响应头 / CORS 默认关闭 / 不信任代理头 ─────────────────
+  const htmlRes = await fetch(`${BASE}/`);
+  check('index.html 带 X-Content-Type-Options: nosniff', htmlRes.headers.get('x-content-type-options') === 'nosniff');
+  check('index.html 带 X-Frame-Options: DENY', htmlRes.headers.get('x-frame-options') === 'DENY');
+  const csp = htmlRes.headers.get('content-security-policy') || '';
+  check('CSP 禁止被 iframe 嵌套且禁用 object', /frame-ancestors 'none'/.test(csp) && /object-src 'none'/.test(csp), csp.slice(0, 70));
+  const healthRes = await fetch(`${BASE}/api/health`);
+  check('/api 响应同样带安全头', healthRes.headers.get('x-content-type-options') === 'nosniff' && !!healthRes.headers.get('content-security-policy'));
+  check('默认不下发 CORS 头（只允许同源）', healthRes.headers.get('access-control-allow-origin') === null, `实际 ${healthRes.headers.get('access-control-allow-origin')}`);
+
+  // 默认不信任 X-Forwarded-For：伪造的代理头不能污染审计里的 IP，也不能靠它绕过登录限速
+  await fetch(`${BASE}/api/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': '203.0.113.77', 'X-Real-IP': '203.0.113.88' },
+    body: JSON.stringify({ username: 'admin', password: '故意错误的口令' }),
+  });
+  const loginDenied = ((await api('/api/audit?limit=200', { token: adminToken })).body?.entries || []).find((entry) => entry.action === 'login' && entry.result === 'denied');
+  check('伪造 X-Forwarded-For 不污染审计 IP', !!loginDenied && loginDenied.ip !== '203.0.113.77' && loginDenied.ip !== '203.0.113.88', loginDenied ? `ip=${loginDenied.ip}` : '未找到登录失败记录');
+
   // ── F. 前端集成 ─────────────────────────────────────────────────────────
   browser = await launchBrowser();
   const page = await (await browser.newContext({ viewport: { width: 1365, height: 1000 } })).newPage();
