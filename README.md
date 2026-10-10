@@ -7,7 +7,7 @@
 - 两种回答模式：**证据摘录**（默认，纯本地、不联网）与**生成式回答**（可选，接入任意 OpenAI 兼容接口，仍只依据检索到的资料作答并强制标注来源）
 - 权限与审计：纯本地模式下由显式策略表 `ACCESS_POLICY` 判定、审计存本机 IndexedDB；**服务端模式下**改为真实登录 + 服务端逐请求校验 + 追加式审计（详见下文与 [`docs/服务端说明.md`](docs/服务端说明.md)）
 - 文档导入：TXT / MD / CSV / JSON / HTML 直接读取；**DOCX / PDF 纯前端零依赖解析**（DOCX 读 ZIP 中央目录取 `word/document.xml`；PDF 解 FlateDecode 流 + ToUnicode CMap 取文本，扫描件会被识别并拒绝）
-- 当前状态：功能闭环已完成；离线评测 **118/118**、生成层 11/11、权限与审计 10/10、文档解析 12/12、模型列表与重排 24/24、回答展示 22/22、文档管理 35/35、**服务端模式 54/54**、**使用者体验 29/29** 通过（见下文）
+- 当前状态：功能闭环已完成；离线评测 **118/118**、判定逻辑单测 19/19、生成层 11/11、权限与审计 10/10、文档解析 12/12、模型列表与重排 24/24、回答展示 22/22、文档管理 35/35、**服务端模式 63/63**、**使用者体验 29/29** 通过（见下文）
 
 ---
 
@@ -187,7 +187,7 @@ npm install          # 只装 devDependency: playwright-core
 CHROME_PATH="/path/to/chrome" npm test
 ```
 
-> 这两件与机器相关的事（playwright-core 在哪、Chrome 在哪）统一收敛在 [`eval/browser-harness.mjs`](eval/browser-harness.mjs)，10 个测试脚本共用，不再各写一份硬编码路径。
+> 这两件与机器相关的事（playwright-core 在哪、Chrome 在哪）统一收敛在 [`eval/browser-harness.mjs`](eval/browser-harness.mjs)，9 个**浏览器测试**脚本共用（`judge-test.mjs` 是纯函数单测，不需要浏览器），不再各写一份硬编码路径。
 
 ```bash
 node eval/run-eval.mjs                 # 检索质量评测，写 eval/report/latest.json + latest.md
